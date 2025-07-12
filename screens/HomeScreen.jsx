@@ -18,7 +18,9 @@ export default function HomeScreen() {
 
   // 🔊 Tap sound
   const onSingleTap = async () => {
-    if (bowlSound) {
+    console.log("Single Tap");
+
+    if (bowlSound || isRotating.current) {
       const status = await bowlSound.getStatusAsync();
       if (status.isPlaying) return;
     }
@@ -39,18 +41,45 @@ export default function HomeScreen() {
   };
 
   const onLongPress = async () => {
-    console.log("✋ Long Press");
-    // Stop and unload previous sound if it exists
+    console.log("✋ Long Press - force stop");
+
+    // Stop bowl sound if exists
     if (bowlSound) {
-      await bowlSound.stopAsync();
+      try {
+        const status = await bowlSound.getStatusAsync();
+        if (status.isLoaded && status.isPlaying) {
+          await bowlSound.stopAsync();
+        }
+        await bowlSound.unloadAsync();
+      } catch (e) {
+        console.log("Error stopping bowl sound:", e);
+      }
+      setBowlSound(null);
+    }
+
+    // Stop meditate sound if exists
+    if (meditateSound) {
+      try {
+        const status = await meditateSound.getStatusAsync();
+        if (status.isLoaded && status.isPlaying) {
+          await meditateSound.stopAsync();
+        }
+        await meditateSound.unloadAsync();
+      } catch (e) {
+        console.log("Error stopping meditate sound:", e);
+      }
+      setMeditateSound(null);
+      isRotating.current = false;
     }
   };
 
   // 🔄 On rotation gesture
   const onRotateGestureEvent = async (event) => {
-    const { rotation, velocity } = event.nativeEvent;
+    const { rotation } = event.nativeEvent;
 
     if (Math.abs(rotation) > 0.1) {
+      console.log("Rotating");
+
       // start sound if not rotating
       if (!isRotating.current) {
         isRotating.current = true;
@@ -59,14 +88,22 @@ export default function HomeScreen() {
           { isLooping: true, rate: 1.0, shouldCorrectPitch: true }
         );
         setMeditateSound(sound);
-        bowlSound.stopAsync();
-        await sound.playAsync();
-      }
 
-      if (meditateSound) {
-        // Normalize velocity to rate (between 0.5 and 2.0)
-        let rate = Math.min(Math.max(Math.abs(velocity) / 5, 0.5), 2.0);
-        await meditateSound.setRateAsync(rate, true);
+        if (bowlSound) {
+          let bowlVolume = 1.0;
+
+          const fadeOut = setInterval(async () => {
+            bowlVolume -= 0.1;
+            if (bowlVolume <= 0) {
+              clearInterval(fadeOut);
+              const bowlStatus = await bowlSound.getStatusAsync();
+              if (bowlStatus.isPlaying) await bowlSound.stopAsync();
+            } else {
+              await bowlSound.setVolumeAsync(bowlVolume);
+            }
+          }, 2000);
+        }
+        await sound.playAsync();
       }
     }
   };
