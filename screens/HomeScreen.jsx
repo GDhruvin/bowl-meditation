@@ -7,10 +7,12 @@ import {
   RotationGestureHandler,
   LongPressGestureHandler,
 } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [bowlSound, setBowlSound] = useState(null);
   const [meditateSound, setMeditateSound] = useState(null);
+  const [hasTappedBowl, setHasTappedBowl] = useState(false);
 
   const isRotating = useRef(false);
   const tapRef = useRef();
@@ -18,7 +20,10 @@ export default function HomeScreen() {
 
   // 🔊 Tap sound
   const onSingleTap = async () => {
-    console.log("Single Tap");
+    if (meditateSound) {
+      const meditateStatus = await meditateSound.getStatusAsync();
+      if (meditateStatus.isLoaded && meditateStatus.isPlaying) return;
+    }
 
     if (bowlSound || isRotating.current) {
       const status = await bowlSound.getStatusAsync();
@@ -28,6 +33,7 @@ export default function HomeScreen() {
     const { sound } = await Audio.Sound.createAsync(
       require("../assets/bowl-sound.mp3")
     );
+    console.log("Single Tap");
 
     // 🔁 Reset state when sound finishes
     sound.setOnPlaybackStatusUpdate((status) => {
@@ -36,6 +42,7 @@ export default function HomeScreen() {
       }
     });
 
+    setHasTappedBowl(true);
     setBowlSound(sound);
     await sound.playAsync();
   };
@@ -71,20 +78,25 @@ export default function HomeScreen() {
       setMeditateSound(null);
       isRotating.current = false;
     }
+    setHasTappedBowl(false);
   };
 
   // 🔄 On rotation gesture
   const onRotateGestureEvent = async (event) => {
+    if (!hasTappedBowl) {
+      console.log("⚠️ Must tap bowl before rotating");
+      return;
+    }
+
     const { rotation } = event.nativeEvent;
 
     if (Math.abs(rotation) > 0.1) {
-      console.log("Rotating");
-
       // start sound if not rotating
       if (!isRotating.current) {
+        console.log("Rotating");
         isRotating.current = true;
         const { sound } = await Audio.Sound.createAsync(
-          require("../assets/meditate_sound.mp3"),
+          require("../assets/tibetan.mp3"),
           { isLooping: true, rate: 1.0, shouldCorrectPitch: true }
         );
         setMeditateSound(sound);
@@ -101,9 +113,15 @@ export default function HomeScreen() {
             } else {
               await bowlSound.setVolumeAsync(bowlVolume);
             }
-          }, 2000);
+          }, 100);
         }
         await sound.playAsync();
+
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.didJustFinish) {
+            setHasTappedBowl(false);
+          }
+        });
       }
     }
   };
@@ -123,44 +141,59 @@ export default function HomeScreen() {
         } else {
           await meditateSound.setVolumeAsync(volume);
         }
-      }, 200);
+      }, 2000);
     }
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <RotationGestureHandler
-          onGestureEvent={onRotateGestureEvent}
-          onEnded={onRotateEnd}
-        >
-          <LongPressGestureHandler
-            ref={longPressRef}
-            minDurationMs={600} // How long to press for "long press"
-            onActivated={onLongPress}
+    <SafeAreaView style={styles.safeArea}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <RotationGestureHandler
+            onGestureEvent={onRotateGestureEvent}
+            onEnded={onRotateEnd}
           >
-            <TapGestureHandler
-              ref={tapRef}
-              numberOfTaps={1}
-              maxDurationMs={300} // Must release within 300ms to count as tap
-              onActivated={onSingleTap}
-              simultaneousHandlers={longPressRef} // Allow both
+            <LongPressGestureHandler
+              ref={longPressRef}
+              minDurationMs={600}
+              onActivated={onLongPress}
             >
-              <View>
-                <Image
-                  source={require("../assets/bowl.png")}
-                  style={styles.image}
-                />
-              </View>
-            </TapGestureHandler>
-          </LongPressGestureHandler>
-        </RotationGestureHandler>
-      </View>
-    </GestureHandlerRootView>
+              <TapGestureHandler
+                ref={tapRef}
+                numberOfTaps={1}
+                maxDurationMs={300}
+                onActivated={onSingleTap}
+                simultaneousHandlers={longPressRef}
+              >
+                <View>
+                  <Image
+                    source={require("../assets/bowl.png")}
+                    style={styles.image}
+                  />
+                </View>
+              </TapGestureHandler>
+            </LongPressGestureHandler>
+          </RotationGestureHandler>
+        </View>
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  image: { width: 350, height: 350, resizeMode: "contain" },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#1C2526",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1C2526",
+  },
+  image: {
+    width: 350,
+    height: 350,
+    resizeMode: "contain",
+  },
 });
