@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Vibration } from "react-native";
 import { Audio } from "expo-av";
 import {
   GestureHandlerRootView,
@@ -42,6 +42,7 @@ export default function HomeScreen() {
       }
     });
 
+    Vibration.vibrate(100);
     setHasTappedBowl(true);
     setBowlSound(sound);
     await sound.playAsync();
@@ -95,6 +96,7 @@ export default function HomeScreen() {
       if (!isRotating.current) {
         console.log("Rotating");
         isRotating.current = true;
+        Vibration.vibrate([0, 100, 100, 100]);
         const { sound } = await Audio.Sound.createAsync(
           require("../assets/tibetan.mp3"),
           { isLooping: true, rate: 1.0, shouldCorrectPitch: true }
@@ -115,6 +117,7 @@ export default function HomeScreen() {
             }
           }, 100);
         }
+
         await sound.playAsync();
 
         sound.setOnPlaybackStatusUpdate((status) => {
