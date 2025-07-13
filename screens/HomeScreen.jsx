@@ -1,182 +1,105 @@
-import { useRef, useState } from "react";
-import { View, Image, StyleSheet, Vibration } from "react-native";
-import { Audio } from "expo-av";
-import {
-  GestureHandlerRootView,
-  TapGestureHandler,
-  RotationGestureHandler,
-  LongPressGestureHandler,
-} from "react-native-gesture-handler";
+import { useState } from "react";
+import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BowlComponent from "../component/bowlComponent";
+import BellComponent from "../component/bellComponent";
+import HandPanComponent from "../component/handPanComponent";
 
 export default function HomeScreen() {
-  const [bowlSound, setBowlSound] = useState(null);
-  const [meditateSound, setMeditateSound] = useState(null);
-  const [hasTappedBowl, setHasTappedBowl] = useState(false);
+  const instruments = [
+    {
+      id: "1",
+      name: "Bowl",
+      image: require("../assets/bowl.png"),
+    },
+    {
+      id: "2",
+      name: "Bell",
+      image: require("../assets/bell.png"),
+    },
+    {
+      id: "3",
+      name: "Hande Pan",
+      image: require("../assets/handpan.jpg"),
+    },
+    {
+      id: "4",
+      name: "Bowl",
+      image: require("../assets/bowl.png"),
+    },
+    {
+      id: "5",
+      name: "Bell",
+      image: require("../assets/bell.png"),
+    },
+    {
+      id: "6",
+      name: "Hande Pan",
+      image: require("../assets/handpan.jpg"),
+    },
+    {
+      id: "7",
+      name: "Bowl",
+      image: require("../assets/bowl.png"),
+    },
+    {
+      id: "8",
+      name: "Bell",
+      image: require("../assets/bell.png"),
+    },
+    {
+      id: "9",
+      name: "Hande Pan",
+      image: require("../assets/handpan.jpg"),
+    },
+  ];
 
-  const isRotating = useRef(false);
-  const tapRef = useRef();
-  const longPressRef = useRef();
+  const [selectedInstrument, setSelectedInstrument] = useState(instruments[0]);
 
-  // 🔊 Tap sound
-  const onSingleTap = async () => {
-    if (meditateSound) {
-      const meditateStatus = await meditateSound.getStatusAsync();
-      if (meditateStatus.isLoaded && meditateStatus.isPlaying) return;
-    }
-
-    if (bowlSound || isRotating.current) {
-      const status = await bowlSound.getStatusAsync();
-      if (status.isPlaying) return;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-      require("../assets/bowl-sound.mp3")
-    );
-    console.log("Single Tap");
-
-    // 🔁 Reset state when sound finishes
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.didJustFinish) {
-        setBowlSound(null);
-      }
-    });
-
-    Vibration.vibrate(100);
-    setHasTappedBowl(true);
-    setBowlSound(sound);
-    await sound.playAsync();
-  };
-
-  const onLongPress = async () => {
-    console.log("✋ Long Press - force stop");
-
-    // Stop bowl sound if exists
-    if (bowlSound) {
-      try {
-        const status = await bowlSound.getStatusAsync();
-        if (status.isLoaded && status.isPlaying) {
-          await bowlSound.stopAsync();
-        }
-        await bowlSound.unloadAsync();
-      } catch (e) {
-        console.log("Error stopping bowl sound:", e);
-      }
-      setBowlSound(null);
-    }
-
-    // Stop meditate sound if exists
-    if (meditateSound) {
-      try {
-        const status = await meditateSound.getStatusAsync();
-        if (status.isLoaded && status.isPlaying) {
-          await meditateSound.stopAsync();
-        }
-        await meditateSound.unloadAsync();
-      } catch (e) {
-        console.log("Error stopping meditate sound:", e);
-      }
-      setMeditateSound(null);
-      isRotating.current = false;
-    }
-    setHasTappedBowl(false);
-  };
-
-  // 🔄 On rotation gesture
-  const onRotateGestureEvent = async (event) => {
-    if (!hasTappedBowl) {
-      console.log("⚠️ Must tap bowl before rotating");
-      return;
-    }
-
-    const { rotation } = event.nativeEvent;
-
-    if (Math.abs(rotation) > 0.1) {
-      // start sound if not rotating
-      if (!isRotating.current) {
-        console.log("Rotating");
-        isRotating.current = true;
-        Vibration.vibrate([0, 100, 100, 100]);
-        const { sound } = await Audio.Sound.createAsync(
-          require("../assets/tibetan.mp3"),
-          { isLooping: true, rate: 1.0, shouldCorrectPitch: true }
-        );
-        setMeditateSound(sound);
-
-        if (bowlSound) {
-          let bowlVolume = 1.0;
-
-          const fadeOut = setInterval(async () => {
-            bowlVolume -= 0.1;
-            if (bowlVolume <= 0) {
-              clearInterval(fadeOut);
-              const bowlStatus = await bowlSound.getStatusAsync();
-              if (bowlStatus.isPlaying) await bowlSound.stopAsync();
-            } else {
-              await bowlSound.setVolumeAsync(bowlVolume);
-            }
-          }, 100);
-        }
-
-        await sound.playAsync();
-
-        sound.setOnPlaybackStatusUpdate((status) => {
-          if (status.didJustFinish) {
-            setHasTappedBowl(false);
-          }
-        });
-      }
+  const renderInstrumentComponent = () => {
+    switch (selectedInstrument.name) {
+      case "Bowl":
+        return <BowlComponent />;
+      case "Bell":
+        return <BellComponent />;
+      case "Hande Pan":
+        return <HandPanComponent />;
+      default:
+        return null;
     }
   };
 
-  // 🛑 On rotation end
-  const onRotateEnd = () => {
-    if (isRotating.current && meditateSound) {
-      let volume = 1.0;
-
-      const fadeOut = setInterval(async () => {
-        volume -= 0.1;
-        if (volume <= 0) {
-          await meditateSound.stopAsync();
-          await meditateSound.unloadAsync();
-          clearInterval(fadeOut);
-          isRotating.current = false;
-        } else {
-          await meditateSound.setVolumeAsync(volume);
-        }
-      }, 2000);
-    }
-  };
+  const renderInstrument = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        setSelectedInstrument(item);
+      }}
+      style={[
+        styles.instrumentContainer,
+        selectedInstrument.id === item.id && styles.selectedInstrument,
+      ]}
+    >
+      <Image source={item.image} style={styles.instrumentImage} />
+      <Text style={styles.instrumentName}>{item.name}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.container}>
-          <RotationGestureHandler
-            onGestureEvent={onRotateGestureEvent}
-            onEnded={onRotateEnd}
-          >
-            <LongPressGestureHandler
-              ref={longPressRef}
-              minDurationMs={600}
-              onActivated={onLongPress}
-            >
-              <TapGestureHandler
-                ref={tapRef}
-                numberOfTaps={1}
-                maxDurationMs={300}
-                onActivated={onSingleTap}
-                simultaneousHandlers={longPressRef}
-              >
-                <View>
-                  <Image
-                    source={require("../assets/bowl.png")}
-                    style={styles.image}
-                  />
-                </View>
-              </TapGestureHandler>
-            </LongPressGestureHandler>
-          </RotationGestureHandler>
+          {renderInstrumentComponent()}
+
+          <FlatList
+            data={instruments}
+            renderItem={renderInstrument}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.instrumentList}
+            contentContainerStyle={styles.instrumentListContent}
+          />
         </View>
       </GestureHandlerRootView>
     </SafeAreaView>
@@ -190,7 +113,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#1C2526",
   },
@@ -198,5 +121,33 @@ const styles = StyleSheet.create({
     width: 350,
     height: 350,
     resizeMode: "contain",
+  },
+  instrumentList: {
+    width: "100%",
+    position: "absolute",
+    bottom: 10,
+  },
+  instrumentListContent: {
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  instrumentContainer: {
+    alignItems: "center",
+    marginHorizontal: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
+  instrumentImage: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+  },
+  instrumentName: {
+    color: "#E0E7E9",
+    marginTop: 5,
+    fontSize: 14,
+  },
+  selectedInstrument: {
+    backgroundColor: "#2E3A3B",
   },
 });
