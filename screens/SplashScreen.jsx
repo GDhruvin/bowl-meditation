@@ -12,10 +12,10 @@ export default function SplashScreen({ navigation }) {
       useNativeDriver: true,
     }).start();
 
-    // const timer = setTimeout(() => {
-    //   navigation.replace("MainTabs");
-    // }, 4000);
-    // return () => clearTimeout(timer);
+    const timer = setTimeout(() => {
+      navigation.replace("MainTabs");
+    }, 4000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
