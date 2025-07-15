@@ -1,6 +1,11 @@
+import { Audio } from "expo-av";
 import { useRef, useState } from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { LongPressGestureHandler, RotationGestureHandler, TapGestureHandler } from "react-native-gesture-handler";
+import { View, StyleSheet, Image, Vibration } from "react-native";
+import {
+  LongPressGestureHandler,
+  RotationGestureHandler,
+  TapGestureHandler,
+} from "react-native-gesture-handler";
 
 export default function BowlComponent() {
   const [bowlSound, setBowlSound] = useState(null);
