@@ -1,5 +1,5 @@
 import { Audio } from "expo-av";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -10,13 +10,56 @@ import {
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 
 export default function BellComponent() {
-  const playSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(
-      require("../assets/bell-hit.mp3")
-    );
+  const soundRef = useRef(null);
+  const lastRotation = useRef(0);
 
-    Vibration.vibrate(100);
-    await sound.playAsync();
+  // Load sound file
+  const loadSound = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../assets/bell-hit.mp3"),
+        { shouldPlay: false }
+      );
+      soundRef.current = sound;
+      console.log("Sound loaded successfully", soundRef.current);
+    } catch (error) {
+      console.error("Failed to load sound", error);
+    }
+  };
+
+  // Load sound on component mount and clean up on unmount
+  useEffect(() => {
+    loadSound();
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unloadAsync().catch((error) => {
+          console.error("Failed to unload sound", error);
+        });
+      }
+    };
+  }, []);
+
+  const playSound = async () => {
+    console.log("soundRef", soundRef);
+
+    if (soundRef.current) {
+      try {
+        await soundRef.current.replayAsync();
+      } catch (error) {
+        console.log("Sound playback failed", error);
+      }
+    }
+  };
+
+  const stopBellSound = async () => {
+    if (soundRef.current) {
+      try {
+        await soundRef.current.stopAsync();
+        console.log("Sound stopped");
+      } catch (error) {
+        console.error("Failed to stop sound", error);
+      }
+    }
   };
 
   const rotation = useRef(new Animated.Value(0)).current;
@@ -36,6 +79,7 @@ export default function BellComponent() {
           toValue: 0,
           useNativeDriver: true,
         }).start();
+        stopBellSound();
       },
     })
   ).current;
@@ -50,13 +94,18 @@ export default function BellComponent() {
   };
 
   return (
-    <Animated.View {...panResponder.panHandlers} style={[animatedStyle]}>
-      <Image
-        source={require("../assets/bell.png")}
-        style={styles.image}
-        resizeMode="contain"
-      />
-    </Animated.View>
+    <LongPressGestureHandler
+      onActivated={stopBellSound}
+      minDurationMs={500}
+    >
+      <Animated.View {...panResponder.panHandlers} style={[animatedStyle]}>
+        <Image
+          source={require("../assets/bell.png")}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </Animated.View>
+    </LongPressGestureHandler>
   );
 }
 
