@@ -1,27 +1,19 @@
 import { Audio } from "expo-av";
-import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  PanResponder,
-  StyleSheet,
-  Image,
-  Vibration,
-} from "react-native";
+import { useEffect, useRef } from "react";
+import { Animated, PanResponder, StyleSheet, Image } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 
 export default function BellComponent() {
   const soundRef = useRef(null);
-  const lastRotation = useRef(0);
 
   // Load sound file
   const loadSound = async () => {
     try {
       const { sound } = await Audio.Sound.createAsync(
-        require("../assets/bell-hit.mp3"),
+        require("../assets/sound/bell-hit.mp3"),
         { shouldPlay: false }
       );
       soundRef.current = sound;
-      console.log("Sound loaded successfully", soundRef.current);
     } catch (error) {
       console.error("Failed to load sound", error);
     }
@@ -40,8 +32,6 @@ export default function BellComponent() {
   }, []);
 
   const playSound = async () => {
-    console.log("soundRef", soundRef);
-
     if (soundRef.current) {
       try {
         await soundRef.current.replayAsync();
@@ -72,14 +62,14 @@ export default function BellComponent() {
       onPanResponderMove: (_, gestureState) => {
         const rotate = Math.max(-15, Math.min(15, -gestureState.dx / 5));
         rotation.setValue(rotate);
-        playSound();
       },
       onPanResponderRelease: () => {
         Animated.spring(rotation, {
           toValue: 0,
           useNativeDriver: true,
         }).start();
-        stopBellSound();
+        // stopBellSound();
+        playSound();
       },
     })
   ).current;
@@ -94,13 +84,10 @@ export default function BellComponent() {
   };
 
   return (
-    <LongPressGestureHandler
-      onActivated={stopBellSound}
-      minDurationMs={500}
-    >
+    <LongPressGestureHandler onActivated={stopBellSound} minDurationMs={500}>
       <Animated.View {...panResponder.panHandlers} style={[animatedStyle]}>
         <Image
-          source={require("../assets/bell.png")}
+          source={require("../assets/image/bell.png")}
           style={styles.image}
           resizeMode="contain"
         />

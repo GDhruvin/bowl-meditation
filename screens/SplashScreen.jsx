@@ -21,7 +21,7 @@ export default function SplashScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require("../assets/logo.png")}
+        source={require("../assets/image/logo.png")}
         style={[styles.logo, { opacity: fadeAnim }]}
       />
       <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>

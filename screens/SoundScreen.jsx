@@ -21,7 +21,7 @@ export default function SoundScreen() {
     }
 
     const { sound } = await Audio.Sound.createAsync(
-      require("../assets/simple.mp3"),
+      require("../assets/sound/simple.mp3"),
       {
         shouldPlay: true,
         isLooping: false,

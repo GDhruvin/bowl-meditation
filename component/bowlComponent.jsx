@@ -29,7 +29,7 @@ export default function BowlComponent() {
     }
 
     const { sound } = await Audio.Sound.createAsync(
-      require("../assets/bowl-sound.mp3")
+      require("../assets/sound/bowl-sound.mp3")
     );
     console.log("Single Tap");
 
@@ -96,7 +96,7 @@ export default function BowlComponent() {
         isRotating.current = true;
         Vibration.vibrate([0, 100, 100, 100]);
         const { sound } = await Audio.Sound.createAsync(
-          require("../assets/tibetan.mp3"),
+          require("../assets/sound/tibetan.mp3"),
           { isLooping: true, rate: 1.0, shouldCorrectPitch: true }
         );
         setMeditateSound(sound);
@@ -165,7 +165,7 @@ export default function BowlComponent() {
         >
           <View>
             <Image
-              source={require("../assets/bowl.png")}
+              source={require("../assets/image/bowl.png")}
               style={styles.image}
             />
           </View>

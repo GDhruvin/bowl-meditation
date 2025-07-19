@@ -11,47 +11,47 @@ export default function HomeScreen() {
     {
       id: "1",
       name: "Bowl",
-      image: require("../assets/bowl.png"),
+      image: require("../assets/image/bowl.png"),
     },
     {
       id: "2",
       name: "Bell",
-      image: require("../assets/bell.png"),
+      image: require("../assets/image/bell.png"),
     },
     {
       id: "3",
       name: "Hande Pan",
-      image: require("../assets/handpan.jpg"),
+      image: require("../assets/image/handpan.jpg"),
     },
     {
       id: "4",
       name: "Bowl",
-      image: require("../assets/bowl.png"),
+      image: require("../assets/image/bowl.png"),
     },
     {
       id: "5",
       name: "Bell",
-      image: require("../assets/bell.png"),
+      image: require("../assets/image/bell.png"),
     },
     {
       id: "6",
       name: "Hande Pan",
-      image: require("../assets/handpan.jpg"),
+      image: require("../assets/image/handpan.jpg"),
     },
     {
       id: "7",
       name: "Bowl",
-      image: require("../assets/bowl.png"),
+      image: require("../assets/image/bowl.png"),
     },
     {
       id: "8",
       name: "Bell",
-      image: require("../assets/bell.png"),
+      image: require("../assets/image/bell.png"),
     },
     {
       id: "9",
       name: "Hande Pan",
-      image: require("../assets/handpan.jpg"),
+      image: require("../assets/image/handpan.jpg"),
     },
   ];
 
