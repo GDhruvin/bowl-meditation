@@ -1,6 +1,12 @@
 import { Audio } from "expo-av";
 import { useEffect, useRef } from "react";
-import { Animated, PanResponder, StyleSheet, Image } from "react-native";
+import {
+  Animated,
+  PanResponder,
+  StyleSheet,
+  Image,
+  Vibration,
+} from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 
 export default function BellComponent() {
@@ -35,6 +41,7 @@ export default function BellComponent() {
     if (soundRef.current) {
       try {
         await soundRef.current.replayAsync();
+        Vibration.vibrate(100);
       } catch (error) {
         console.log("Sound playback failed", error);
       }
@@ -68,7 +75,6 @@ export default function BellComponent() {
           toValue: 0,
           useNativeDriver: true,
         }).start();
-        // stopBellSound();
         playSound();
       },
     })

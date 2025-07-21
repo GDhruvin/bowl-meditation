@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BowlComponent from "../component/bowlComponent";
-import BellComponent from "../component/bellComponent";
-import HandPanComponent from "../component/handPanComponent";
+
+const BowlComponent = lazy(() => import("../component/bowlComponent"));
+const BellComponent = lazy(() => import("../component/bellComponent"));
+const HandPanComponent = lazy(() => import("../component/handPanComponent"));
+const GongComponent = lazy(() => import("../component/GongComponent"));
+const OceanDrumComponent = lazy(() =>
+  import("../component/OceanDrumComponent")
+);
+const TuningForkComponent = lazy(() =>
+  import("../component/TuningForkComponent")
+);
 
 export default function HomeScreen() {
   const instruments = [
@@ -25,33 +33,18 @@ export default function HomeScreen() {
     },
     {
       id: "4",
-      name: "Bowl",
-      image: require("../assets/image/bowl.png"),
+      name: "Gong",
+      image: require("../assets/image/gong.png"),
     },
     {
       id: "5",
-      name: "Bell",
-      image: require("../assets/image/bell.png"),
+      name: "Ocen Drum",
+      image: require("../assets/image/ocean_drum.png"),
     },
     {
       id: "6",
-      name: "Hande Pan",
-      image: require("../assets/image/handpan.jpg"),
-    },
-    {
-      id: "7",
-      name: "Bowl",
-      image: require("../assets/image/bowl.png"),
-    },
-    {
-      id: "8",
-      name: "Bell",
-      image: require("../assets/image/bell.png"),
-    },
-    {
-      id: "9",
-      name: "Hande Pan",
-      image: require("../assets/image/handpan.jpg"),
+      name: "Tuning Forks",
+      image: require("../assets/image/tuning_forks.png"),
     },
   ];
 
@@ -65,6 +58,12 @@ export default function HomeScreen() {
         return <BellComponent />;
       case "Hande Pan":
         return <HandPanComponent />;
+      case "Gong":
+        return <GongComponent />;
+      case "Ocen Drum":
+        return <OceanDrumComponent />;
+      case "Tuning Forks":
+        return <TuningForkComponent />;
       default:
         return null;
     }
@@ -72,9 +71,7 @@ export default function HomeScreen() {
 
   const renderInstrument = ({ item }) => (
     <TouchableOpacity
-      onPress={() => {
-        setSelectedInstrument(item);
-      }}
+      onPress={() => setSelectedInstrument(item)}
       style={[
         styles.instrumentContainer,
         selectedInstrument.id === item.id && styles.selectedInstrument,
@@ -89,7 +86,11 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={styles.container}>
-          {renderInstrumentComponent()}
+          <Suspense
+            fallback={<Text style={{ color: "#fff" }}>Loading...</Text>}
+          >
+            {renderInstrumentComponent()}
+          </Suspense>
 
           <FlatList
             data={instruments}

@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, Pressable } from "react-native";
+import { View, Image, StyleSheet, Pressable, Vibration } from "react-native";
 import { Audio } from "expo-av";
 import { useEffect, useRef } from "react";
 
@@ -28,6 +28,7 @@ export default function HandPanComponent() {
   const playSound = async (index) => {
     const sound = soundRefs.current[index];
     if (sound) {
+      Vibration.vibrate(50);
       await sound.replayAsync(); // More efficient than playAsync after first load
     } else {
       console.warn("Sound not loaded yet for index:", index);
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderRadius: "50%",
     opacity: 0.6,
-    borderWidth: 1,
-    borderColor: "#000",
+    // borderWidth: 1,
+    // borderColor: "#000",
   },
 });
