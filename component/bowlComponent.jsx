@@ -1,22 +1,35 @@
 import { Audio } from "expo-av";
-import { useRef, useState } from "react";
-import { View, StyleSheet, Image, Vibration } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, Image, Vibration, TouchableOpacity, Text } from "react-native";
 import {
   LongPressGestureHandler,
   RotationGestureHandler,
   TapGestureHandler,
 } from "react-native-gesture-handler";
+import InstructionModal from "../Model/InstructionModal";
 
 export default function BowlComponent() {
   const [bowlSound, setBowlSound] = useState(null);
   const [meditateSound, setMeditateSound] = useState(null);
   const [hasTappedBowl, setHasTappedBowl] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const isRotating = useRef(false);
   const tapRef = useRef();
   const longPressRef = useRef();
 
-  // 🔊 Tap sound
+  // ⏳ Check if first-time user
+  useEffect(() => {
+    const checkFirstUse = async () => {
+      const value = await AsyncStorage.getItem("hasUsedApp");
+      if (!value) {
+        setShowInstructions(true);
+      }
+    };
+    checkFirstUse();
+  }, []);
+
   const onSingleTap = async () => {
     if (meditateSound) {
       const meditateStatus = await meditateSound.getStatusAsync();
@@ -146,32 +159,49 @@ export default function BowlComponent() {
     }
   };
 
+  const resetStorage = async () => {
+    await AsyncStorage.clear();
+    setShowInstructions(true);
+  };
+
   return (
-    <RotationGestureHandler
-      onGestureEvent={onRotateGestureEvent}
-      onEnded={onRotateEnd}
-    >
-      <LongPressGestureHandler
-        ref={longPressRef}
-        minDurationMs={600}
-        onActivated={onLongPress}
+    <>
+      <RotationGestureHandler
+        onGestureEvent={onRotateGestureEvent}
+        onEnded={onRotateEnd}
       >
-        <TapGestureHandler
-          ref={tapRef}
-          numberOfTaps={1}
-          maxDurationMs={300}
-          onActivated={onSingleTap}
-          simultaneousHandlers={longPressRef}
+        <LongPressGestureHandler
+          ref={longPressRef}
+          minDurationMs={600}
+          onActivated={onLongPress}
         >
-          <View>
-            <Image
-              source={require("../assets/image/bowl.png")}
-              style={styles.image}
-            />
-          </View>
-        </TapGestureHandler>
-      </LongPressGestureHandler>
-    </RotationGestureHandler>
+          <TapGestureHandler
+            ref={tapRef}
+            numberOfTaps={1}
+            maxDurationMs={300}
+            onActivated={onSingleTap}
+            simultaneousHandlers={longPressRef}
+          >
+            <View>
+              {/* <TouchableOpacity style={styles.resetBtn} onPress={resetStorage}>
+                <Text style={[styles.buttonText, { fontSize: 12 }]}>
+                  Reset Storage (Test)
+                </Text>
+              </TouchableOpacity> */}
+              <Image
+                source={require("../assets/image/bowl.png")}
+                style={styles.image}
+              />
+            </View>
+          </TapGestureHandler>
+        </LongPressGestureHandler>
+      </RotationGestureHandler>
+
+      <InstructionModal
+        showInstructions={showInstructions}
+        setShowInstructions={setShowInstructions}
+      />
+    </>
   );
 }
 
@@ -180,5 +210,40 @@ const styles = StyleSheet.create({
     width: 350,
     height: 350,
     resizeMode: "contain",
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalBox: {
+    backgroundColor: "#fff",
+    padding: 25,
+    borderRadius: 16,
+    width: "80%",
+    alignItems: "center",
+  },
+  stepText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  button: {
+    backgroundColor: "#1C6758",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  resetBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: 150,
+    backgroundColor: "#A91D3A",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
