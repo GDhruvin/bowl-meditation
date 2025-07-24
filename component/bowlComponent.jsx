@@ -1,7 +1,7 @@
 import { Audio } from "expo-av";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, Image, Vibration, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, Image, Vibration } from "react-native";
 import {
   LongPressGestureHandler,
   RotationGestureHandler,
@@ -22,7 +22,7 @@ export default function BowlComponent() {
   // ⏳ Check if first-time user
   useEffect(() => {
     const checkFirstUse = async () => {
-      const value = await AsyncStorage.getItem("hasUsedApp");
+      const value = await AsyncStorage.getItem("hasUsed_Bowl");
       if (!value) {
         setShowInstructions(true);
       }
@@ -160,7 +160,7 @@ export default function BowlComponent() {
   };
 
   const resetStorage = async () => {
-    await AsyncStorage.clear();
+    await AsyncStorage.removeItem("hasUsed_Bowl");
     setShowInstructions(true);
   };
 
@@ -198,8 +198,14 @@ export default function BowlComponent() {
       </RotationGestureHandler>
 
       <InstructionModal
-        showInstructions={showInstructions}
-        setShowInstructions={setShowInstructions}
+        show={showInstructions}
+        steps={[
+          "👆 Step 1: Tap the bowl once to play a calming sound.",
+          "🌀 Step 2: Use two fingers to rotate the bowl and begin meditation sound.",
+          "✋ Step 3: Long press to stop all sounds anytime.",
+        ]}
+        storageKey="hasUsed_Bowl"
+        onClose={() => setShowInstructions(false)}
       />
     </>
   );

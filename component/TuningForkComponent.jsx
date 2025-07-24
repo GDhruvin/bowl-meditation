@@ -1,10 +1,24 @@
 import { useRef, useState } from "react";
 import { Pressable, Image, StyleSheet, Vibration } from "react-native";
 import { Audio } from "expo-av";
+import InstructionModal from "../Model/InstructionModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TuningForkComponent() {
   const soundRef = useRef(new Audio.Sound());
   const [isLoading, setIsLoading] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  // ⏳ Check if first-time user
+  useEffect(() => {
+    const checkFirstUse = async () => {
+      const value = await AsyncStorage.getItem("hasUsed_TuningFork");
+      if (!value) {
+        setShowInstructions(true);
+      }
+    };
+    checkFirstUse();
+  }, []);
 
   const playSound = async () => {
     if (isLoading) return;
@@ -40,13 +54,29 @@ export default function TuningForkComponent() {
   };
 
   return (
-    <Pressable onPress={playSound} onLongPress={stopSound} delayLongPress={300}>
-      <Image
-        source={require("../assets/image/tuning_forks.png")}
-        style={styles.image}
-        resizeMode="contain"
+    <>
+      <Pressable
+        onPress={playSound}
+        onLongPress={stopSound}
+        delayLongPress={300}
+      >
+        <Image
+          source={require("../assets/image/tuning_forks.png")}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </Pressable>
+
+      <InstructionModal
+        show={showInstructions}
+        steps={[
+          "👆 Step 1: Tap the tuning fork to play the sound.",
+          "✋ Step 2: Long press to stop the sound anytime.",
+        ]}
+        storageKey="hasUsed_TuningFork"
+        onClose={() => setShowInstructions(false)}
       />
-    </Pressable>
+    </>
   );
 }
 

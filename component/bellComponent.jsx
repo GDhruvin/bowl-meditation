@@ -1,5 +1,5 @@
 import { Audio } from "expo-av";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -8,9 +8,23 @@ import {
   Vibration,
 } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
+import InstructionModal from "../Model/InstructionModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BellComponent() {
   const soundRef = useRef(null);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  // ⏳ Check if first-time user
+  useEffect(() => {
+    const checkFirstUse = async () => {
+      const value = await AsyncStorage.getItem("hasUsed_Bell");
+      if (!value) {
+        setShowInstructions(true);
+      }
+    };
+    checkFirstUse();
+  }, []);
 
   // Load sound file
   const loadSound = async () => {
@@ -90,15 +104,27 @@ export default function BellComponent() {
   };
 
   return (
-    <LongPressGestureHandler onActivated={stopBellSound} minDurationMs={500}>
-      <Animated.View {...panResponder.panHandlers} style={[animatedStyle]}>
-        <Image
-          source={require("../assets/image/bell.png")}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </Animated.View>
-    </LongPressGestureHandler>
+    <>
+      <LongPressGestureHandler onActivated={stopBellSound} minDurationMs={500}>
+        <Animated.View {...panResponder.panHandlers} style={[animatedStyle]}>
+          <Image
+            source={require("../assets/image/bell.png")}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </Animated.View>
+      </LongPressGestureHandler>
+
+      <InstructionModal
+        show={showInstructions}
+        steps={[
+          "👆 Step 1: Hold the bell and drag it slightly left or right, then release to play the sound.",
+          "✋ Step 2: Long press on the bell to stop the sound anytime.",
+        ]}
+        storageKey="hasUsed_Bell"
+        onClose={() => setShowInstructions(false)}
+      />
+    </>
   );
 }
 

@@ -1,47 +1,43 @@
-// components/InstructionModal.js
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 export default function InstructionModal({
-  showInstructions,
-  setShowInstructions,
+  show,
+  steps = [],
+  storageKey = "hasUsedApp",
+  onClose,
 }) {
-  const [instructionStep, setInstructionStep] = useState(0);
+  const [step, setStep] = useState(0);
 
-  const instructionSteps = [
-    "👆 Step 1: Tap the bowl once to play a calming sound.",
-    "🌀 Step 2: Use two fingers to rotate the bowl and begin meditation sound.",
-    "✋ Step 3: Long press to stop all sounds anytime.",
-  ];
+  useEffect(() => {
+    if (!show) {
+      setStep(0); // reset when modal closes
+    }
+  }, [show]);
 
-  const handleFinishInstructions = async () => {
-    setShowInstructions(false);
-    await AsyncStorage.setItem("hasUsedApp", "true");
+  const handleFinish = async () => {
+    await AsyncStorage.setItem(storageKey, "true");
+    onClose?.(); // call parent close handler
+  };
+
+  const handleNext = () => {
+    if (step === steps.length - 1) {
+      handleFinish();
+    } else {
+      setStep((prev) => prev + 1);
+    }
   };
 
   return (
-    <Modal visible={showInstructions} transparent animationType="fade">
+    <Modal visible={show} transparent animationType="fade">
       <View style={styles.modalContainer}>
         <View style={styles.modalBox}>
-          <Text style={styles.stepText}>
-            {instructionSteps[instructionStep]}
-          </Text>
+          <Text style={styles.stepText}>{steps[step]}</Text>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              if (instructionStep === instructionSteps.length - 1) {
-                handleFinishInstructions();
-              } else {
-                setInstructionStep((prev) => prev + 1);
-              }
-            }}
-          >
+          <TouchableOpacity style={styles.button} onPress={handleNext}>
             <Text style={styles.buttonText}>
-              {instructionStep === instructionSteps.length - 1
-                ? "Finish"
-                : "Next"}
+              {step === steps.length - 1 ? "Finish" : "Next"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -75,12 +71,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     marginTop: 10,
-  },
-  resetBtn: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    width: 150,
-    backgroundColor: "#A91D3A",
   },
   buttonText: {
     color: "#fff",

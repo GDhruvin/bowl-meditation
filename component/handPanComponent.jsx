@@ -1,9 +1,23 @@
 import { View, Image, StyleSheet, Pressable, Vibration } from "react-native";
 import { Audio } from "expo-av";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import InstructionModal from "../Model/InstructionModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HandPanComponent() {
   const soundRefs = useRef([]);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  // ⏳ Check if first-time user
+  useEffect(() => {
+    const checkFirstUse = async () => {
+      const value = await AsyncStorage.getItem("hasUsed_HandPan");
+      if (!value) {
+        setShowInstructions(true);
+      }
+    };
+    checkFirstUse();
+  }, []);
 
   const loadSounds = async () => {
     const modules = [
@@ -95,6 +109,16 @@ export default function HandPanComponent() {
           ]}
         />
       ))}
+
+      <InstructionModal
+        show={showInstructions}
+        steps={[
+          "👆 Step 1: Tap the handpan nodes to play different sounds.",
+          "✋ Step 2: Long press on a node to stop the sound anytime.",
+        ]}
+        storageKey="hasUsed_HandPan"
+        onClose={() => setShowInstructions(false)}
+      />
     </View>
   );
 }
