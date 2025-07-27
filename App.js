@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./screens/SplashScreen";
 import TabNavigator from "./navigators/TabNavigator";
+import BoxBreathingScreen from "./screens/BoxBreathingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,10 @@ export default function App() {
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="MainTabs" component={TabNavigator} />
+        <Stack.Screen
+          name="BoxBreathingScreen"
+          component={BoxBreathingScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

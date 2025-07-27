@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, Image, StyleSheet, Vibration } from "react-native";
 import { Audio } from "expo-av";
 import InstructionModal from "../Model/InstructionModal";
