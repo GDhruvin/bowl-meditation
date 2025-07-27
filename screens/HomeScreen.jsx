@@ -1,5 +1,5 @@
 import { useState, Suspense, lazy } from "react";
-import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -85,23 +85,19 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <Suspense
-            fallback={<Text style={{ color: "#fff" }}>Loading...</Text>}
-          >
-            {renderInstrumentComponent()}
-          </Suspense>
+        <Suspense fallback={<Text style={{ color: "#fff" }}>Loading...</Text>}>
+          {renderInstrumentComponent()}
+        </Suspense>
 
-          <FlatList
-            data={instruments}
-            renderItem={renderInstrument}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.instrumentList}
-            contentContainerStyle={styles.instrumentListContent}
-          />
-        </View>
+        <FlatList
+          data={instruments}
+          renderItem={renderInstrument}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.instrumentList}
+          contentContainerStyle={styles.instrumentListContent}
+        />
       </GestureHandlerRootView>
     </SafeAreaView>
   );
@@ -114,9 +110,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "#1C2526",
+    width: "100%",
   },
   image: {
     width: 350,

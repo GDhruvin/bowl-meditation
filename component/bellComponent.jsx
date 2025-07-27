@@ -6,14 +6,20 @@ import {
   StyleSheet,
   Image,
   Vibration,
+  TouchableOpacity,
+  Text,
+  Modal,
+  View,
 } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 import InstructionModal from "../Model/InstructionModal";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BellComponent() {
   const soundRef = useRef(null);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   // ⏳ Check if first-time user
   useEffect(() => {
@@ -105,6 +111,12 @@ export default function BellComponent() {
 
   return (
     <>
+      <View style={styles.header}>
+        <Text style={styles.title}>Tibetan Bowl</Text>
+        <TouchableOpacity onPress={() => setShowInfo(true)}>
+          <Ionicons name="help-circle-outline" size={28} color="#333" />
+        </TouchableOpacity>
+      </View>
       <LongPressGestureHandler onActivated={stopBellSound} minDurationMs={500}>
         <Animated.View {...panResponder.panHandlers} style={[animatedStyle]}>
           <Image
@@ -124,13 +136,82 @@ export default function BellComponent() {
         storageKey="hasUsed_Bell"
         onClose={() => setShowInstructions(false)}
       />
+
+      <Modal visible={showInfo} animationType="slide" transparent>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>About Tibetan Bowl</Text>
+            <Text style={styles.modalText}>
+              Tibetan singing bowls produce rich, deep tones when played. They
+              are known to promote relaxation, reduce stress and anxiety, and
+              aid in meditation and healing practices.
+            </Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowInfo(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    width: "100%",
+    paddingVertical: 16,
+    backgroundColor: "#F5F5F5",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+  },
   image: {
     width: 400,
     height: 400,
+    alignSelf: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 20,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 12,
+    color: "#222",
+  },
+  modalText: {
+    fontSize: 16,
+    color: "#444",
+  },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: "#333",
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  closeButtonText: {
+    textAlign: "center",
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
