@@ -1,12 +1,28 @@
-import { View, Image, StyleSheet, Pressable, Vibration } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Pressable,
+  Vibration,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+} from "react-native";
 import { Audio } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import InstructionModal from "../Model/InstructionModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
+import InfoModel from "../Model/infoModal";
 
 export default function HandPanComponent() {
   const soundRefs = useRef([]);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const [showInfo, setShowInfo] = useState(false);
 
   // ⏳ Check if first-time user
   useEffect(() => {
@@ -43,7 +59,7 @@ export default function HandPanComponent() {
     const sound = soundRefs.current[index];
     if (sound) {
       Vibration.vibrate(50);
-      await sound.replayAsync(); // More efficient than playAsync after first load
+      await sound.replayAsync();
     } else {
       console.warn("Sound not loaded yet for index:", index);
     }
@@ -53,7 +69,6 @@ export default function HandPanComponent() {
     loadSounds();
 
     return () => {
-      // Clean up sounds on unmount
       soundRefs.current.forEach((sound) => {
         if (sound) sound.unloadAsync();
       });
@@ -61,15 +76,15 @@ export default function HandPanComponent() {
   }, []);
 
   const nodePositions = [
-    { top: 35, left: 143, width: 60, height: 45 }, // 5
-    { top: 47, left: 239, width: 50, height: 50 }, // 6
-    { top: 115, left: 300, width: 55, height: 60 }, // 7
-    { top: 220, left: 290, width: 65, height: 70 }, // 8
-    { top: 290, left: 200, width: 75, height: 70 }, // 1
-    { top: 270, left: 80, width: 75, height: 70 }, // 2
-    { top: 175, left: 35, width: 60, height: 65 }, // 3
-    { top: 81, left: 70, width: 50, height: 60 }, // 4
-    { top: 155, left: 165, width: 70, height: 50 }, // 9
+    { top: 0.34, left: 0.35, width: 0.16, height: 0.09 }, // Node 5
+    { top: 0.34, left: 0.59, width: 0.14, height: 0.1 }, // Node 6
+    { top: 0.46, left: 0.75, width: 0.15, height: 0.11 }, // Node 7
+    { top: 0.62, left: 0.73, width: 0.18, height: 0.15 }, // Node 8
+    { top: 0.75, left: 0.5, width: 0.2, height: 0.13 }, // Node 1
+    { top: 0.73, left: 0.18, width: 0.2, height: 0.11 }, // Node 2
+    { top: 0.56, left: 0.07, width: 0.16, height: 0.12 }, // Node 3
+    { top: 0.4, left: 0.16, width: 0.14, height: 0.1 }, // Node 4
+    { top: 0.52, left: 0.42, width: 0.19, height: 0.1 }, // Node 9
   ];
 
   const nodeColors = [
@@ -84,12 +99,25 @@ export default function HandPanComponent() {
     "#d9d9d9",
   ];
 
+  const handleImageLayout = (event) => {
+    const { width, height } = event.nativeEvent.layout;
+    setImageDimensions({ width, height });
+  };
+
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Handpan</Text>
+        <TouchableOpacity onPress={() => setShowInfo(true)}>
+          <Ionicons name="help-circle-outline" size={28} color="#4CAF50" />
+        </TouchableOpacity>
+      </View>
+
       <Image
         source={require("../assets/image/handpan.jpg")}
         style={styles.image}
         resizeMode="contain"
+        onLayout={handleImageLayout}
       />
 
       {/* Overlay nodes */}
@@ -100,10 +128,10 @@ export default function HandPanComponent() {
           style={[
             styles.node,
             {
-              width: pos.width,
-              height: pos.height,
-              top: pos.top,
-              left: pos.left,
+              width: imageDimensions.width * pos.width,
+              height: imageDimensions.height * pos.height,
+              top: imageDimensions.height * pos.top,
+              left: imageDimensions.width * pos.left,
               // backgroundColor: nodeColors[index],
             },
           ]}
@@ -119,20 +147,76 @@ export default function HandPanComponent() {
         storageKey="hasUsed_HandPan"
         onClose={() => setShowInstructions(false)}
       />
+
+      <InfoModel visible={showInfo} onClose={() => setShowInfo(false)}>
+        <Text style={styles.modalTitle}>About Handpan</Text>
+
+        <Text style={styles.modalText}>
+          The handpan is a modern, hand-played percussion instrument originating
+          from Switzerland, known for its unique, soothing tones. It is widely
+          used in meditation, music therapy, and spiritual practices across the
+          globe.
+        </Text>
+
+        <Text style={styles.modalTitle}>✨ Key Benefits</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Promotes deep relaxation through melodic vibrations{"\n"}
+          {"\u2022"} Reduces stress, anxiety, and mental fatigue{"\n"}
+          {"\u2022"} Enhances focus, creativity, and emotional expression{"\n"}
+          {"\u2022"} Supports mindfulness and meditative states{"\n"}
+          {"\u2022"} Encourages emotional and energetic balance
+        </Text>
+
+        <Text style={styles.modalTitle}>🛑 When to Use</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} During meditation to deepen your practice{"\n"}
+          {"\u2022"} In music therapy or sound healing sessions{"\n"}
+          {"\u2022"} As a creative outlet for improvisation and relaxation{"\n"}
+          {"\u2022"} With groups for collaborative music-making
+        </Text>
+
+        <Text style={styles.modalTitle}>🎧 App Usage Tips</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Tap the handpan nodes to play different notes{"\n"}
+          {"\u2022"} Experiment with combinations for melodic patterns{"\n"}
+          {"\u2022"} Long press on a node to stop the sound instantly
+        </Text>
+
+        <Text style={styles.modalTitle}>📿 Spiritual Insight</Text>
+        <Text style={styles.modalText}>
+          The handpan's resonant tones create harmonic vibrations that align
+          with the body's energy centers, fostering a sense of peace,
+          connection, and spiritual harmony.
+        </Text>
+      </InfoModel>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#4CAF50",
+  },
   container: {
+    // flex: 1,
     position: "relative",
-    width: 400,
-    height: 400,
+    width: "100%",
+    height: "80%",
   },
   image: {
     width: "100%",
     height: "100%",
-    position: "absolute",
+    maxWidth: Dimensions.get("window").width,
+    maxHeight: Dimensions.get("window").height * 0.8,
   },
   node: {
     position: "absolute",
@@ -140,5 +224,16 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     // borderWidth: 1,
     // borderColor: "#000",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#4CAF50",
+    marginBottom: 12,
+  },
+  modalText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    marginBottom: 10,
   },
 });

@@ -2,6 +2,7 @@ import { useState, Suspense, lazy } from "react";
 import { Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SuspenseComponent from "../component/SuspenseComponent";
 
 const BowlComponent = lazy(() => import("../component/bowlComponent"));
 const BellComponent = lazy(() => import("../component/bellComponent"));
@@ -85,7 +86,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Suspense fallback={<Text style={{ color: "#fff" }}>Loading...</Text>}>
+        <Suspense fallback={<SuspenseComponent />}>
           {renderInstrumentComponent()}
         </Suspense>
 

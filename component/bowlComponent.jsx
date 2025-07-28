@@ -6,18 +6,17 @@ import {
   StyleSheet,
   Image,
   Vibration,
-  Modal,
   TouchableOpacity,
   Text,
 } from "react-native";
 import {
   LongPressGestureHandler,
   RotationGestureHandler,
-  ScrollView,
   TapGestureHandler,
 } from "react-native-gesture-handler";
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
+import InfoModel from "../Model/infoModal";
 
 export default function BowlComponent() {
   const [bowlSound, setBowlSound] = useState(null);
@@ -225,64 +224,46 @@ export default function BowlComponent() {
         onClose={() => setShowInstructions(false)}
       />
 
-      <Modal visible={showInfo} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <ScrollView
-              contentContainerStyle={styles.scrollContainer}
-              showsVerticalScrollIndicator={false}
-            >
-              <Text style={styles.modalTitle}>About Tibetan Bowl</Text>
+      <InfoModel visible={showInfo} onClose={() => setShowInfo(false)}>
+        <Text style={styles.modalTitle}>About Tibetan Bell</Text>
 
-              <Text style={styles.modalText}>
-                Tibetan singing bowls have been used for centuries in Himalayan
-                regions as powerful tools for healing, meditation, and spiritual
-                practices.
-              </Text>
+        <Text style={styles.modalText}>
+          Tibetan singing bells have been used for centuries in Himalayan
+          regions as powerful tools for healing, meditation, and spiritual
+          practices.
+        </Text>
 
-              <Text style={styles.modalTitle}>✨ Key Benefits</Text>
-              <Text style={styles.modalText}>
-                {"\u2022"} Deep relaxation by slowing brain waves{"\n"}
-                {"\u2022"} Reduce stress, anxiety & emotional tension{"\n"}
-                {"\u2022"} Improve clarity, focus & mindfulness{"\n"}
-                {"\u2022"} Activate healing via parasympathetic nervous system
-                {"\n"}
-                {"\u2022"} Aid in chakra balancing & energy cleansing
-              </Text>
+        <Text style={styles.modalTitle}>✨ Key Benefits</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Deep relaxation by slowing brain waves{"\n"}
+          {"\u2022"} Reduce stress, anxiety & emotional tension{"\n"}
+          {"\u2022"} Improve clarity, focus & mindfulness{"\n"}
+          {"\u2022"} Activate healing via parasympathetic nervous system{"\n"}
+          {"\u2022"} Aid in chakra balancing & energy cleansing
+        </Text>
 
-              <Text style={styles.modalTitle}>🛑 When to Use</Text>
-              <Text style={styles.modalText}>
-                {"\u2022"} Before/after meditation to enhance stillness{"\n"}
-                {"\u2022"} During yoga or breathwork as grounding anchor{"\n"}
-                {"\u2022"} As a timer for mindful productivity sessions{"\n"}
-                {"\u2022"} With children or beginners for mindfulness fun
-              </Text>
+        <Text style={styles.modalTitle}>🛑 When to Use</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Before/after meditation to enhance stillness{"\n"}
+          {"\u2022"} During yoga or breathwork as grounding anchor{"\n"}
+          {"\u2022"} As a timer for mindful productivity sessions{"\n"}
+          {"\u2022"} With children or beginners for mindfulness fun
+        </Text>
 
-              <Text style={styles.modalTitle}>🎧 App Usage Tips</Text>
-              <Text style={styles.modalText}>
-                {"\u2022"} Tap the bowl for a bell sound{"\n"}
-                {"\u2022"} Rotate with two fingers to play the humming loop
-                {"\n"}
-                {"\u2022"} Long press to stop all sounds instantly
-              </Text>
+        <Text style={styles.modalTitle}>🎧 App Usage Tips</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Tap the bell for a bell sound{"\n"}
+          {"\u2022"} Rotate with two fingers to play the humming loop{"\n"}
+          {"\u2022"} Long press to stop all sounds instantly
+        </Text>
 
-              <Text style={styles.modalTitle}>📿 Spiritual Insight</Text>
-              <Text style={styles.modalText}>
-                The sound waves emitted by Tibetan bowls resonate with the
-                body's energy fields to clear blockages and bring balance
-                between body, mind, and spirit.
-              </Text>
-
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setShowInfo(false)}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
+        <Text style={styles.modalTitle}>📿 Spiritual Insight</Text>
+        <Text style={styles.modalText}>
+          The sound waves emitted by Tibetan bells resonate with the body's
+          energy fields to clear blockages and bring balance between body, mind,
+          and spirit.
+        </Text>
+      </InfoModel>
     </>
   );
 }
@@ -344,21 +325,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalContent: {
-    backgroundColor: "#1C2526",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 16,
-    paddingHorizontal: 24,
-    paddingBottom: 30,
-    maxHeight: "60%",
-    elevation: 10,
-  },
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
@@ -369,19 +335,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     marginBottom: 10,
-  },
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: "#4CAF50",
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  closeButtonText: {
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  scrollContainer: {
-    paddingBottom: 20,
   },
 });

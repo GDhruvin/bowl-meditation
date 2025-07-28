@@ -8,13 +8,13 @@ import {
   Vibration,
   TouchableOpacity,
   Text,
-  Modal,
   View,
 } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import InfoModel from "../Model/infoModal";
 
 export default function BellComponent() {
   const soundRef = useRef(null);
@@ -114,7 +114,7 @@ export default function BellComponent() {
       <View style={styles.header}>
         <Text style={styles.title}>Tibetan Bowl</Text>
         <TouchableOpacity onPress={() => setShowInfo(true)}>
-          <Ionicons name="help-circle-outline" size={28} color="#333" />
+          <Ionicons name="help-circle-outline" size={28} color="#4CAF50" />
         </TouchableOpacity>
       </View>
       <LongPressGestureHandler onActivated={stopBellSound} minDurationMs={500}>
@@ -137,24 +137,46 @@ export default function BellComponent() {
         onClose={() => setShowInstructions(false)}
       />
 
-      <Modal visible={showInfo} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>About Tibetan Bowl</Text>
-            <Text style={styles.modalText}>
-              Tibetan singing bowls produce rich, deep tones when played. They
-              are known to promote relaxation, reduce stress and anxiety, and
-              aid in meditation and healing practices.
-            </Text>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setShowInfo(false)}
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <InfoModel visible={showInfo} onClose={() => setShowInfo(false)}>
+        <Text style={styles.modalTitle}>About Tibetan Bowl</Text>
+
+        <Text style={styles.modalText}>
+          Tibetan singing bowls have been used for centuries in Himalayan
+          regions as powerful tools for healing, meditation, and spiritual
+          practices.
+        </Text>
+
+        <Text style={styles.modalTitle}>✨ Key Benefits</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Deep relaxation by slowing brain waves{"\n"}
+          {"\u2022"} Reduce stress, anxiety & emotional tension{"\n"}
+          {"\u2022"} Improve clarity, focus & mindfulness{"\n"}
+          {"\u2022"} Activate healing via parasympathetic nervous system{"\n"}
+          {"\u2022"} Aid in chakra balancing & energy cleansing
+        </Text>
+
+        <Text style={styles.modalTitle}>🛑 When to Use</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Before/after meditation to enhance stillness{"\n"}
+          {"\u2022"} During yoga or breathwork as grounding anchor{"\n"}
+          {"\u2022"} As a timer for mindful productivity sessions{"\n"}
+          {"\u2022"} With children or beginners for mindfulness fun
+        </Text>
+
+        <Text style={styles.modalTitle}>🎧 App Usage Tips</Text>
+        <Text style={styles.modalText}>
+          {"\u2022"} Tap the bowl for a bell sound{"\n"}
+          {"\u2022"} Rotate with two fingers to play the humming loop{"\n"}
+          {"\u2022"} Long press to stop all sounds instantly
+        </Text>
+
+        <Text style={styles.modalTitle}>📿 Spiritual Insight</Text>
+        <Text style={styles.modalText}>
+          The sound waves emitted by Tibetan bowls resonate with the body's
+          energy fields to clear blockages and bring balance between body, mind,
+          and spirit.
+        </Text>
+      </InfoModel>
     </>
   );
 }
@@ -165,33 +187,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    width: "100%",
     paddingVertical: 16,
-    backgroundColor: "#F5F5F5",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: "#4CAF50",
   },
   image: {
     width: 400,
     height: 400,
     alignSelf: "center",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    justifyContent: "center",
-    padding: 20,
-  },
-  modalContent: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 20,
-    elevation: 5,
   },
   modalTitle: {
     fontSize: 18,
@@ -202,16 +208,5 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 16,
     color: "#444",
-  },
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: "#333",
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  closeButtonText: {
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
   },
 });
