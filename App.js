@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./screens/SplashScreen";
 import TabNavigator from "./navigators/TabNavigator";
 import BoxBreathingScreen from "./screens/BoxBreathingScreen";
+import FourSevenEightBreathingScreen from "./screens/FourSevenEightBreathingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,10 @@ export default function App() {
         <Stack.Screen
           name="BoxBreathingScreen"
           component={BoxBreathingScreen}
+        />
+        <Stack.Screen
+          name="FourSevenEightBreathingScreen"
+          component={FourSevenEightBreathingScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

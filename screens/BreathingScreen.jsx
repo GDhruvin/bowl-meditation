@@ -14,7 +14,7 @@ const breathingExercises = [
     id: "2",
     name: "4-7-8 Breathing",
     description: "Relax with 4s inhale, 7s hold, and 8s exhale rhythm.",
-    screen: "FourSevenEightScreen",
+    screen: "FourSevenEightBreathingScreen",
   },
   {
     id: "3",

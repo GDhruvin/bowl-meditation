@@ -14,39 +14,31 @@ import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function BoxBreathingScreen() {
+export default function FourSevenEightBreathingScreen() {
   const navigation = useNavigation();
-  const ballPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isRunning, setIsRunning] = useState(false);
   const [phase, setPhase] = useState("Ready");
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
 
-  const phases = ["Inhale", "Hold", "Exhale", "Hold"];
-  const duration = 4000;
+  const phases = ["Inhale", "Hold", "Exhale"];
+  const durations = [4000, 7000, 8000]; // 4s inhale, 7s hold, 8s exhale
+  const animationDurations = [4000, 3900, 4500]; // 4s inhale, 7s hold, 8s exhale
+
   const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
+  const timeoutRef = useRef(null);
 
-  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
+  const animateAndSchedule = (index) => {
+    const currentPhase = phases[index];
+    const currentDuration = durations[index];
+    const nextIndex = (index + 1) % phases.length;
 
-  const squareSize = 300;
-  const ballSize = 40;
-
-  useEffect(() => {
-    Animated.timing(ballPosition, {
-      toValue: targetPosition,
-      duration,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start();
-  }, [targetPosition]);
-
-  const animatePhase = (index) => {
-    const nextPhase = phases[index % phases.length];
-    setPhase(nextPhase);
+    setPhase(currentPhase);
 
     if (isSpeechEnabled) {
-      Speech.speak(nextPhase, {
+      Speech.speak(currentPhase, {
         language: "en-US",
         pitch: 1.0,
         rate: 0.6,
@@ -54,55 +46,46 @@ export default function BoxBreathingScreen() {
       });
     }
 
-    if (index % 4 === 0) {
-      // Inhale: Move right (top-left to top-right)
-      setTargetPosition({ x: squareSize - (ballSize + 10), y: 0 });
-    } else if (index % 4 === 1) {
-      // Hold: Move down (top-right to bottom-right)
-      setTargetPosition({
-        x: squareSize - (ballSize + 10),
-        y: squareSize - (ballSize + 10),
-      });
-    } else if (index % 4 === 2) {
-      // Exhale: Move left (bottom-right to bottom-left)
-      setTargetPosition({ x: 0, y: squareSize - (ballSize + 10) });
-    } else if (index % 4 === 3) {
-      // Hold: Move up (bottom-left to top-left)
-      setTargetPosition({ x: 0, y: 0 });
-    }
+    // Animate
+    Animated.timing(scaleAnim, {
+      toValue:
+        currentPhase === "Inhale" ? 2.5 : currentPhase === "Hold" ? 2.5 : 1, // Exhale
+      duration: durations[index],
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();
+
+    // Schedule next phase
+    timeoutRef.current = setTimeout(() => {
+      setPhaseIndex(nextIndex);
+      animateAndSchedule(nextIndex);
+    }, currentDuration);
   };
 
   const startBreathing = () => {
     setIsRunning(true);
-    animatePhase(phaseIndex);
-    intervalRef.current = setInterval(() => {
-      setPhaseIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % phases.length;
-        animatePhase(nextIndex);
-        return nextIndex;
-      });
-    }, duration);
+    animateAndSchedule(phaseIndex); // kick off the first phase
   };
 
   const stopBreathing = () => {
     setIsRunning(false);
-    clearInterval(intervalRef.current);
+    clearTimeout(timeoutRef.current);
     setPhase("Ready");
     setPhaseIndex(0);
-    Animated.timing(ballPosition, {
-      toValue: { x: 0, y: 0 },
+
+    Animated.timing(scaleAnim, {
+      toValue: 1,
       duration: 100,
       easing: Easing.linear,
       useNativeDriver: true,
-    }).start(() => {
-      setTargetPosition({ x: 0, y: 0 });
-    });
+    }).start();
+
     Speech.stop();
   };
 
   useEffect(() => {
     return () => {
-      clearInterval(intervalRef.current);
+      clearTimeout(timeoutRef.current);
       Speech.stop();
     };
   }, []);
@@ -116,7 +99,6 @@ export default function BoxBreathingScreen() {
     });
   };
 
-  // Toggle music modal visibility
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
@@ -133,10 +115,10 @@ export default function BoxBreathingScreen() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Box Breathing</Text>
+          <Text style={styles.headerTitle}>4-7-8 Breathing</Text>
           <View style={{ width: 24 }} />
         </View>
-        {/* Animation Square */}
+        {/* Animation Circle */}
         <View style={styles.centerContent}>
           <View style={styles.headerButtons}>
             <TouchableOpacity
@@ -160,20 +142,12 @@ export default function BoxBreathingScreen() {
               <Ionicons name="musical-notes" size={24} color="white" />
             </TouchableOpacity>
           </View>
-          <View
-            style={[styles.square, { width: squareSize, height: squareSize }]}
-          >
+          <View style={styles.circleContainer}>
             <Animated.View
               style={[
-                styles.ball,
+                styles.circle,
                 {
-                  width: ballSize,
-                  height: ballSize,
-                  borderRadius: ballSize / 2,
-                  transform: [
-                    { translateX: ballPosition.x },
-                    { translateY: ballPosition.y },
-                  ],
+                  transform: [{ scale: scaleAnim }],
                 },
               ]}
             />
@@ -248,16 +222,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  square: {
+  circleContainer: {
+    width: 300,
+    height: 300,
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 10,
-    borderRadius: 10,
+    borderRadius: 150,
     borderColor: "#ffff",
-    position: "relative",
     marginBottom: 24,
   },
-  ball: {
+  circle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     backgroundColor: "#4CAF50",
-    position: "absolute",
   },
   phaseText: {
     fontSize: 24,
