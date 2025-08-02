@@ -105,7 +105,7 @@ export default function FourSevenEightBreathingScreen() {
 
   return (
     <ImageBackground
-      source={require("../assets/image/box_breathing_bg.jpg")}
+      source={require("../assets/image/478_bg.jpg")}
       style={styles.container}
       resizeMode="cover"
     >
@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1C2526",
-    paddingTop: 48,
   },
   overlay: {
     flex: 1,

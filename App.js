@@ -4,6 +4,7 @@ import SplashScreen from "./screens/SplashScreen";
 import TabNavigator from "./navigators/TabNavigator";
 import BoxBreathingScreen from "./screens/BoxBreathingScreen";
 import FourSevenEightBreathingScreen from "./screens/FourSevenEightBreathingScreen";
+import AlternateNostrilBreathingScreen from "./screens/AlternateNostrilBreathingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,10 @@ export default function App() {
         <Stack.Screen
           name="FourSevenEightBreathingScreen"
           component={FourSevenEightBreathingScreen}
+        />
+        <Stack.Screen
+          name="AlternateNostrilBreathingScreen"
+          component={AlternateNostrilBreathingScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

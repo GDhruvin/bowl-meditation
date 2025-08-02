@@ -8,78 +8,99 @@ import {
   Easing,
   ImageBackground,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function BoxBreathingScreen() {
+export default function AlternateNostrilBreathingScreen() {
   const navigation = useNavigation();
-  const ballPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const [isRunning, setIsRunning] = useState(false);
-  const [phase, setPhase] = useState("Ready");
+  const [phaseIndex, setPhaseIndex] = useState(0);
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
-
-  const phases = ["Inhale", "Hold", "Exhale", "Hold"];
-  const duration = 4000;
-  const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
 
-  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
+  const duration = 5000;
+  const rhombusSize = 200;
+  const r = rhombusSize / Math.SQRT2;
 
-  const squareSize = 300;
-  const ballSize = 40;
+  const points = {
+    1: { x: 0, y: -r }, // Top
+    2: { x: -r, y: 0 }, // Left
+    3: { x: 0, y: r }, // Bottom
+    4: { x: r, y: 0 }, // Right
+  };
 
-  useEffect(() => {
-    Animated.timing(ballPosition, {
-      toValue: targetPosition,
-      duration,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start();
-  }, [targetPosition]);
+  const ballPosition = useRef(new Animated.ValueXY({ x: 0, y: -r })).current;
 
-  const animatePhase = (index) => {
-    const nextPhase = phases[index % phases.length];
-    setPhase(nextPhase);
+  const phases = [
+    "Inhale Left", // Move to point 2 (left)
+    "Hold", // Stay at point 2
+    "Exhale Right", // Move to point 3 (bottom)
+    "Inhale Right", // Move to point 4 (right)
+    "Hold", // Stay at point 4
+    "Exhale Left", // Move to point 1 (top)
+  ];
 
+  const speak = (text) => {
     if (isSpeechEnabled) {
-      Speech.speak(nextPhase, {
+      Speech.stop(); // Prevent speech overlap
+      Speech.speak(text, {
         language: "en-US",
         pitch: 1.0,
         rate: 0.6,
         onError: (error) => console.error("Speech error:", error),
       });
     }
+  };
 
-    if (index % 4 === 0) {
-      // Inhale: Move right (top-left to top-right)
-      setTargetPosition({ x: squareSize - (ballSize + 10), y: 0 });
-    } else if (index % 4 === 1) {
-      // Hold: Move down (top-right to bottom-right)
-      setTargetPosition({
-        x: squareSize - (ballSize + 10),
-        y: squareSize - (ballSize + 10),
-      });
-    } else if (index % 4 === 2) {
-      // Exhale: Move left (bottom-right to bottom-left)
-      setTargetPosition({ x: 0, y: squareSize - (ballSize + 10) });
-    } else if (index % 4 === 3) {
-      // Hold: Move up (bottom-left to top-left)
-      setTargetPosition({ x: 0, y: 0 });
+  const animatePhase = (index) => {
+    const phase = phases[index];
+    let targetPosition;
+
+    switch (index) {
+      case 0: // Inhale Left: Move to point 2 (left)
+        targetPosition = points[2];
+        break;
+      case 1: // Hold: Stay at point 2 (left)
+        targetPosition = points[2];
+        break;
+      case 2: // Exhale Right: Move to point 3 (bottom)
+        targetPosition = points[3];
+        break;
+      case 3: // Inhale Right: Move to point 4 (right)
+        targetPosition = points[4];
+        break;
+      case 4: // Hold: Stay at point 4 (right)
+        targetPosition = points[4];
+        break;
+      case 5: // Exhale Left: Move to point 1 (top)
+        targetPosition = points[1];
+        break;
     }
+
+    Animated.timing(ballPosition, {
+      toValue: targetPosition,
+      duration: phase.includes("Hold") ? 0 : duration, // No animation for Hold phases
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();
+
+    speak(phase);
   };
 
   const startBreathing = () => {
+    if (isRunning) return; // Prevent multiple starts
     setIsRunning(true);
     animatePhase(phaseIndex);
+
     intervalRef.current = setInterval(() => {
-      setPhaseIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % phases.length;
-        animatePhase(nextIndex);
-        return nextIndex;
+      setPhaseIndex((prev) => {
+        const next = (prev + 1) % phases.length;
+        animatePhase(next);
+        return next;
       });
     }, duration);
   };
@@ -87,17 +108,13 @@ export default function BoxBreathingScreen() {
   const stopBreathing = () => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
-    setPhase("Ready");
     setPhaseIndex(0);
-    Animated.timing(ballPosition, {
-      toValue: { x: 0, y: 0 },
-      duration: 100,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start(() => {
-      setTargetPosition({ x: 0, y: 0 });
-    });
     Speech.stop();
+    Animated.timing(ballPosition, {
+      toValue: points[1], // Reset to top (point 1)
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
   useEffect(() => {
@@ -109,34 +126,30 @@ export default function BoxBreathingScreen() {
 
   const toggleSpeech = () => {
     setIsSpeechEnabled((prev) => {
-      if (prev) {
-        Speech.stop();
-      }
+      if (prev) Speech.stop();
       return !prev;
     });
   };
 
-  // Toggle music modal visibility
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
 
   return (
     <ImageBackground
-      source={require("../assets/image/box_breathing_bg.jpg")}
+      source={require("../assets/image/alternate_nostril_bg.jpg")}
       style={styles.container}
       resizeMode="cover"
     >
       <SafeAreaView style={styles.overlay} edges={["top", "left", "right"]}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Box Breathing</Text>
+          <Text style={styles.headerTitle}>Alternate Nostril Breathing</Text>
           <View style={{ width: 24 }} />
         </View>
-        {/* Animation Square */}
+
         <View style={styles.centerContent}>
           <View style={styles.headerButtons}>
             <TouchableOpacity
@@ -160,16 +173,13 @@ export default function BoxBreathingScreen() {
               <Ionicons name="musical-notes" size={24} color="white" />
             </TouchableOpacity>
           </View>
-          <View
-            style={[styles.square, { width: squareSize, height: squareSize }]}
-          >
+
+          <View style={styles.rhombusContainer}>
+            <View style={styles.rhombusOutline} />
             <Animated.View
               style={[
                 styles.ball,
                 {
-                  width: ballSize,
-                  height: ballSize,
-                  borderRadius: ballSize / 2,
                   transform: [
                     { translateX: ballPosition.x },
                     { translateY: ballPosition.y },
@@ -178,9 +188,10 @@ export default function BoxBreathingScreen() {
               ]}
             />
           </View>
-          <Text style={styles.phaseText}>{phase}</Text>
+
+          <Text style={styles.phaseText}>{phases[phaseIndex]}</Text>
         </View>
-        {/* Start/Stop Buttons */}
+
         <View style={styles.buttonContainer}>
           {isRunning ? (
             <TouchableOpacity style={styles.buttonStop} onPress={stopBreathing}>
@@ -196,7 +207,6 @@ export default function BoxBreathingScreen() {
           )}
         </View>
 
-        {/* Music Selection Modal */}
         <BackgroundMusicModal
           isVisible={isMusicModalVisible}
           onClose={toggleMusicModal}
@@ -247,21 +257,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  square: {
-    borderWidth: 10,
-    borderRadius: 10,
+  rhombusContainer: {
+    width: 240,
+    height: 400,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 32,
+  },
+  rhombusOutline: {
+    width: 200,
+    height: 200,
+    borderWidth: 5,
     borderColor: "#ffff",
-    position: "relative",
-    marginBottom: 24,
+    transform: [{ rotate: "45deg" }], // Rotate to form rhombus
+    position: "absolute",
   },
   ball: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: "#4CAF50",
     position: "absolute",
   },
   phaseText: {
-    fontSize: 24,
+    fontSize: 28,
     color: "white",
     fontWeight: "600",
+    textAlign: "center",
   },
   buttonContainer: {
     paddingHorizontal: 20,

@@ -20,7 +20,7 @@ const breathingExercises = [
     id: "3",
     name: "Alternate Nostril (Nadi Shodhana)",
     description: "Balance energy by alternating nostril breathing.",
-    screen: "AlternateNostrilScreen",
+    screen: "AlternateNostrilBreathingScreen",
   },
   {
     id: "4",
