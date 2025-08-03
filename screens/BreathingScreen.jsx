@@ -24,15 +24,9 @@ const breathingExercises = [
   },
   {
     id: "4",
-    name: "Ocean Breath (Ujjayi)",
-    description: "Deep breathing with a soft sound like ocean waves.",
-    screen: "OceanBreathScreen",
-  },
-  {
-    id: "5",
-    name: "Bee Breath (Bhramari)",
-    description: "Exhale with a humming sound to soothe the nervous system.",
-    screen: "BeeBreathScreen",
+    name: "Triangle Breathing",
+    description: "Follow a triangular path of inhale, hold, and exhale.",
+    screen: "TriangleBreathingScreen",
   },
 ];
 
