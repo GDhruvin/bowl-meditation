@@ -6,6 +6,7 @@ import BoxBreathingScreen from "./screens/BoxBreathingScreen";
 import FourSevenEightBreathingScreen from "./screens/FourSevenEightBreathingScreen";
 import AlternateNostrilBreathingScreen from "./screens/AlternateNostrilBreathingScreen";
 import TriangleBreathingScreen from "./screens/TriangleBreathingScreen";
+import BellowsBreathScreen from "./screens/BellowsBreathScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,10 @@ export default function App() {
         <Stack.Screen
           name="TriangleBreathingScreen"
           component={TriangleBreathingScreen}
+        />
+        <Stack.Screen
+          name="BellowsBreathScreen"
+          component={BellowsBreathScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

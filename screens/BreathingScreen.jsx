@@ -28,6 +28,12 @@ const breathingExercises = [
     description: "Follow a triangular path of inhale, hold, and exhale.",
     screen: "TriangleBreathingScreen",
   },
+  {
+    id: "5",
+    name: "Bellows Breath (Bhastrika)",
+    description: "Rapid inhale and exhale to energize and stimulate your body.",
+    screen: "BellowsBreathScreen",
+  },
 ];
 
 export default function BreathingScreen({ navigation }) {
