@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import SoundScreen from "../screens/SoundScreen";
 import BreathingScreen from "../screens/BreathingScreen";
+import MeditationScreen from "../screens/MeditationScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -26,8 +27,10 @@ export default function TabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
+          if (route.name === "Instruments") {
+            iconName = focused ? "radio" : "radio-outline";
+          } else if (route.name === "Meditation") {
+            iconName = focused ? "medkit" : "medkit-outline";
           } else if (route.name === "Sound") {
             iconName = focused ? "musical-notes" : "musical-notes-outline";
           } else if (route.name === "Breathing") {
@@ -40,7 +43,8 @@ export default function TabNavigator() {
         tabBarInactiveTintColor: "#A7B7B9",
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Instruments" component={HomeScreen} />
+      <Tab.Screen name="Meditation" component={MeditationScreen} />
       <Tab.Screen name="Sound" component={SoundScreen} />
       <Tab.Screen name="Breathing" component={BreathingScreen} />
     </Tab.Navigator>

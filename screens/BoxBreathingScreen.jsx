@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BoxBreathingScreen() {
   const navigation = useNavigation();
-  const ballPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const ballPosition = useRef(new Animated.ValueXY({ x: -20, y: -20 })).current;
   const [isRunning, setIsRunning] = useState(false);
   const [phase, setPhase] = useState("Ready");
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
@@ -27,7 +27,7 @@ export default function BoxBreathingScreen() {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
 
-  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
+  const [targetPosition, setTargetPosition] = useState({ x: -20, y: -20 });
 
   const squareSize = 300;
   const ballSize = 40;
@@ -56,19 +56,19 @@ export default function BoxBreathingScreen() {
 
     if (index % 4 === 0) {
       // Inhale: Move right (top-left to top-right)
-      setTargetPosition({ x: squareSize - (ballSize + 10), y: 0 });
+      setTargetPosition({ x: squareSize - (ballSize - 5), y: -20 });
     } else if (index % 4 === 1) {
       // Hold: Move down (top-right to bottom-right)
       setTargetPosition({
-        x: squareSize - (ballSize + 10),
-        y: squareSize - (ballSize + 10),
+        x: squareSize - (ballSize - 5),
+        y: squareSize - (ballSize - 5),
       });
     } else if (index % 4 === 2) {
       // Exhale: Move left (bottom-right to bottom-left)
-      setTargetPosition({ x: 0, y: squareSize - (ballSize + 10) });
+      setTargetPosition({ x: -20, y: squareSize - (ballSize - 5) });
     } else if (index % 4 === 3) {
       // Hold: Move up (bottom-left to top-left)
-      setTargetPosition({ x: 0, y: 0 });
+      setTargetPosition({ x: -20, y: -20 });
     }
   };
 
@@ -90,12 +90,12 @@ export default function BoxBreathingScreen() {
     setPhase("Ready");
     setPhaseIndex(0);
     Animated.timing(ballPosition, {
-      toValue: { x: 0, y: 0 },
+      toValue: { x: -20, y: -20 },
       duration: 100,
       easing: Easing.linear,
       useNativeDriver: true,
     }).start(() => {
-      setTargetPosition({ x: 0, y: 0 });
+      setTargetPosition({ x: -20, y: -20 });
     });
     Speech.stop();
   };
