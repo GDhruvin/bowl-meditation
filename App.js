@@ -8,6 +8,7 @@ import AlternateNostrilBreathingScreen from "./screens/AlternateNostrilBreathing
 import TriangleBreathingScreen from "./screens/TriangleBreathingScreen";
 import BellowsBreathScreen from "./screens/BellowsBreathScreen";
 import OmChantingScreen from "./screens/OmChantingScreen";
+import CandleGazingScreen from "./screens/CandleGazingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,10 @@ export default function App() {
           component={BellowsBreathScreen}
         />
         <Stack.Screen name="OmChantingScreen" component={OmChantingScreen} />
+        <Stack.Screen
+          name="CandleGazingScreen"
+          component={CandleGazingScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

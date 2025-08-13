@@ -10,28 +10,10 @@ const meditations = [
     screen: "OmChantingScreen",
   },
   {
-    id: "2",
-    name: "Body Scan Meditation",
-    description: "Gently scan your body to release tension and relax.",
-    screen: "BodyScanMeditationScreen",
-  },
-  {
-    id: "3",
-    name: "Chakra Meditation",
-    description: "Align and energize your chakras with color and sound.",
-    screen: "ChakraMeditationScreen",
-  },
-  {
     id: "4",
     name: "Candle Gazing (Trataka)",
     description: "Focus your mind and vision on a single flame.",
     screen: "CandleGazingScreen",
-  },
-  {
-    id: "5",
-    name: "Gratitude Meditation",
-    description: "Uplift your mind with thoughts of gratitude and peace.",
-    screen: "GratitudeMeditationScreen",
   },
 
   // 🔁 Mantra Variations
@@ -58,12 +40,6 @@ const meditations = [
     name: "Maha Mrityunjaya Mantra",
     description: "A healing chant for strength and well-being.",
     screen: "MrityunjayaMantraScreen",
-  },
-  {
-    id: "10",
-    name: "Custom Mantra",
-    description: "Choose your own Sanskrit or personal mantra.",
-    screen: "CustomMantraScreen",
   },
 ];
 
