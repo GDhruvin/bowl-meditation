@@ -10,6 +10,8 @@ import BellowsBreathScreen from "./screens/BellowsBreathScreen";
 import OmChantingScreen from "./screens/OmChantingScreen";
 import CandleGazingScreen from "./screens/CandleGazingScreen";
 import SoHumMantraScreen from "./screens/SoHumMantraScreen";
+import ShantiMantraScreen from "./screens/ShantiMantraScreen";
+import GayatriMantraScreen from "./screens/GayatriMantraScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,10 +49,9 @@ export default function App() {
           name="CandleGazingScreen"
           component={CandleGazingScreen}
         />
-        <Stack.Screen
-          name="SoHumMantraScreen"
-          component={SoHumMantraScreen}
-        />
+        <Stack.Screen name="SoHumMantraScreen" component={SoHumMantraScreen} />
+        <Stack.Screen name="ShantiMantraScreen" component={ShantiMantraScreen} />
+        <Stack.Screen name="GayatriMantraScreen" component={GayatriMantraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
