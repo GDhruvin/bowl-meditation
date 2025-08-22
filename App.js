@@ -12,6 +12,7 @@ import CandleGazingScreen from "./screens/CandleGazingScreen";
 import SoHumMantraScreen from "./screens/SoHumMantraScreen";
 import ShantiMantraScreen from "./screens/ShantiMantraScreen";
 import GayatriMantraScreen from "./screens/GayatriMantraScreen";
+import MrityunjayaMantraScreen from "./screens/MrityunjayaMantraScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,7 @@ export default function App() {
         <Stack.Screen name="SoHumMantraScreen" component={SoHumMantraScreen} />
         <Stack.Screen name="ShantiMantraScreen" component={ShantiMantraScreen} />
         <Stack.Screen name="GayatriMantraScreen" component={GayatriMantraScreen} />
+        <Stack.Screen name="MrityunjayaMantraScreen" component={MrityunjayaMantraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
