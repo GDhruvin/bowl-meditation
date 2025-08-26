@@ -1,9 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import SoundScreen from "../screens/SoundScreen";
 import BreathingScreen from "../screens/BreathingScreen";
 import MeditationScreen from "../screens/MeditationScreen";
+import YogaScreen from "../screens/YogaScreen";
+import InstrumentsIcon from "../icons/InstrumentsIcon";
+import MeditationIcon from "../icons/MeditationIcon";
+import SoundIcon from "../icons/SoundIcon";
+import BreathingIcon from "../icons/BreathingIcon";
+import YogasIcon from "../icons/YogasIcon";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,19 +30,21 @@ export default function TabNavigator() {
           borderTopColor: "#2E3A3B",
         },
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          let IconComponent;
 
           if (route.name === "Instruments") {
-            iconName = focused ? "radio" : "radio-outline";
+            IconComponent = InstrumentsIcon;
           } else if (route.name === "Meditation") {
-            iconName = focused ? "medkit" : "medkit-outline";
+            IconComponent = MeditationIcon;
           } else if (route.name === "Sound") {
-            iconName = focused ? "musical-notes" : "musical-notes-outline";
+            IconComponent = SoundIcon;
           } else if (route.name === "Breathing") {
-            iconName = focused ? "leaf" : "leaf-outline";
+            IconComponent = BreathingIcon;
+          } else if (route.name === "Yogas") {
+            IconComponent = YogasIcon;
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <IconComponent focused={focused} color={color} size={size} />;
         },
         tabBarActiveTintColor: "#4CAF50",
         tabBarInactiveTintColor: "#A7B7B9",
@@ -47,6 +54,7 @@ export default function TabNavigator() {
       <Tab.Screen name="Meditation" component={MeditationScreen} />
       <Tab.Screen name="Sound" component={SoundScreen} />
       <Tab.Screen name="Breathing" component={BreathingScreen} />
+      <Tab.Screen name="Yogas" component={YogaScreen} />
     </Tab.Navigator>
   );
 }
