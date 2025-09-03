@@ -16,6 +16,7 @@ import MrityunjayaMantraScreen from "./screens/MrityunjayaMantraScreen";
 import TadasanaScreen from "./screens/TadasanaScreen";
 import VrikshasanaScreen from "./screens/VrikshasanaScreen";
 import BhujangasanaScreen from "./screens/BhujangasanaScreen";
+import DownwardDogScreen from "./screens/DownwardDogScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -72,6 +73,7 @@ export default function App() {
           name="BhujangasanaScreen"
           component={BhujangasanaScreen}
         />
+        <Stack.Screen name="DownwardDogScreen" component={DownwardDogScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
