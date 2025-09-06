@@ -19,6 +19,8 @@ import BhujangasanaScreen from "./screens/BhujangasanaScreen";
 import DownwardDogScreen from "./screens/DownwardDogScreen";
 import PadmasanaScreen from "./screens/PadmasanaScreen";
 import ShavasanaScreen from "./screens/ShavasanaScreen";
+import TrikonasanaScreen from "./screens/TrikonasanaScreen";
+import SuryaNamaskarScreen from "./screens/SuryaNamaskarScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -78,6 +80,11 @@ export default function App() {
         <Stack.Screen name="DownwardDogScreen" component={DownwardDogScreen} />
         <Stack.Screen name="PadmasanaScreen" component={PadmasanaScreen} />
         <Stack.Screen name="ShavasanaScreen" component={ShavasanaScreen} />
+        <Stack.Screen
+          name="SuryaNamaskarScreen"
+          component={SuryaNamaskarScreen}
+        />
+        <Stack.Screen name="TrikonasanaScreen" component={TrikonasanaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
