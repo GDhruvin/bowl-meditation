@@ -10,11 +10,13 @@ import {
 } from "react-native";
 import { Audio } from "expo-av";
 import InstructionModal from "../Model/InstructionModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModel from "../Model/infoModal";
+import { useLocalData } from "../hooks/useLocalData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function GongComponent() {
+  const { instruments } = useLocalData();
   const soundRef = useRef(new Audio.Sound());
   const [isLoading, setIsLoading] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -23,9 +25,17 @@ export default function GongComponent() {
   // ⏳ Check if first-time user
   useEffect(() => {
     const checkFirstUse = async () => {
-      const value = await AsyncStorage.getItem("hasUsed_Gong");
-      if (!value) {
-        setShowInstructions(true);
+      try {
+        const storedData = await AsyncStorage.getItem("appLocalData");
+        const parsed = storedData
+          ? JSON.parse(storedData)
+          : { instruments: {} };
+        if (!parsed["instrument"]["hasUsed_Gong"]) {
+          setShowInstructions(true);
+        }
+      } catch (error) {
+        console.error("Failed to load appLocalData:", error);
+        setShowInstructions(true); // Fallback to showing instructions on error
       }
     };
     checkFirstUse();

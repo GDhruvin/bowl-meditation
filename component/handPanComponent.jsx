@@ -11,11 +11,13 @@ import {
 import { Audio } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import InstructionModal from "../Model/InstructionModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModel from "../Model/infoModal";
+import { useLocalData } from "../hooks/useLocalData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HandPanComponent() {
+  const { instruments } = useLocalData();
   const soundRefs = useRef([]);
   const [showInstructions, setShowInstructions] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
@@ -27,9 +29,17 @@ export default function HandPanComponent() {
   // ⏳ Check if first-time user
   useEffect(() => {
     const checkFirstUse = async () => {
-      const value = await AsyncStorage.getItem("hasUsed_HandPan");
-      if (!value) {
-        setShowInstructions(true);
+      try {
+        const storedData = await AsyncStorage.getItem("appLocalData");
+        const parsed = storedData
+          ? JSON.parse(storedData)
+          : { instruments: {} };
+        if (!parsed["instrument"]["hasUsed_HandPan"]) {
+          setShowInstructions(true);
+        }
+      } catch (error) {
+        console.error("Failed to load appLocalData:", error);
+        setShowInstructions(true); // Fallback to showing instructions on error
       }
     };
     checkFirstUse();

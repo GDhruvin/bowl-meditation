@@ -23,10 +23,19 @@ import TrikonasanaScreen from "./screens/TrikonasanaScreen";
 import SuryaNamaskarScreen from "./screens/SuryaNamaskarScreen";
 import UtkatasanaScreen from "./screens/UtkatasanaScreen";
 import DhanurasanaScreen from "./screens/DhanurasanaScreen";
+import { useLocalData } from "./hooks/useLocalData";
+import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const { initializeLocalData, clearAll } = useLocalData();
+
+  useEffect(() => {
+    initializeLocalData();
+    // clearAll();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator

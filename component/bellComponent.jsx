@@ -13,10 +13,12 @@ import {
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import InfoModel from "../Model/infoModal";
+import { useLocalData } from "../hooks/useLocalData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BellComponent() {
+  const { instruments } = useLocalData();
   const soundRef = useRef(null);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -24,14 +26,21 @@ export default function BellComponent() {
   // ⏳ Check if first-time user
   useEffect(() => {
     const checkFirstUse = async () => {
-      const value = await AsyncStorage.getItem("hasUsed_Bell");
-      if (!value) {
-        setShowInstructions(true);
+      try {
+        const storedData = await AsyncStorage.getItem("appLocalData");
+        const parsed = storedData
+          ? JSON.parse(storedData)
+          : { instruments: {} };
+        if (!parsed["instrument"]["hasUsed_Bell"]) {
+          setShowInstructions(true);
+        }
+      } catch (error) {
+        console.error("Failed to load appLocalData:", error);
+        setShowInstructions(true); // Fallback to showing instructions on error
       }
     };
     checkFirstUse();
   }, []);
-
   // Load sound file
   const loadSound = async () => {
     try {

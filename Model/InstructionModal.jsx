@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function InstructionModal({
   show,
@@ -8,6 +8,7 @@ export default function InstructionModal({
   storageKey = "hasUsedApp",
   onClose,
 }) {
+  const { updateInstrument } = useLocalData();
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function InstructionModal({
   }, [show]);
 
   const handleFinish = async () => {
-    await AsyncStorage.setItem(storageKey, "true");
+    updateInstrument(storageKey, true);
     onClose?.(); // call parent close handler
   };
 

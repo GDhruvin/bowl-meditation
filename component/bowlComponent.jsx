@@ -17,8 +17,10 @@ import {
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModel from "../Model/infoModal";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function BowlComponent() {
+  const { instruments } = useLocalData();
   const [bowlSound, setBowlSound] = useState(null);
   const [meditateSound, setMeditateSound] = useState(null);
   const [hasTappedBowl, setHasTappedBowl] = useState(false);
@@ -32,9 +34,18 @@ export default function BowlComponent() {
   // ⏳ Check if first-time user
   useEffect(() => {
     const checkFirstUse = async () => {
-      const value = await AsyncStorage.getItem("hasUsed_Bowl");
-      if (!value) {
-        setShowInstructions(true);
+      try {
+        const storedData = await AsyncStorage.getItem("appLocalData");
+        const parsed = storedData
+          ? JSON.parse(storedData)
+          : { instruments: {} };
+
+        if (!parsed["instrument"]["hasUsed_Bowl"]) {
+          setShowInstructions(true);
+        }
+      } catch (error) {
+        console.error("Failed to load appLocalData:", error);
+        setShowInstructions(true); // Fallback to showing instructions on error
       }
     };
     checkFirstUse();
