@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function SoHumMantraScreen() {
   const navigation = useNavigation();
@@ -20,12 +21,16 @@ export default function SoHumMantraScreen() {
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current; // For fade animation
   const translateYAnim = useRef(new Animated.Value(50)).current; // For upward movement
+  const startTimeRef = useRef(null);
+  const { updateMeditationSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
 
   const startChanting = async () => {
+    startTimeRef.current = Date.now(); // track session start
+
     setIsRunning(true);
 
     if (!soundRef.current) {
@@ -55,6 +60,14 @@ export default function SoHumMantraScreen() {
   };
 
   const stopChanting = async () => {
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateMeditationSession("So Hum Mantra", duration);
+
     // Start fade out animation
     Animated.timing(fadeAnim, {
       toValue: 0,

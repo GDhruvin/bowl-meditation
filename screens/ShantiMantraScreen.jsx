@@ -1,22 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    ImageBackground,
-    StyleSheet,
-    Animated,
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  StyleSheet,
+  Animated,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
-const mantraLines = [
-  "ॐ",
-  "शान्तिः शान्तिः शान्तिः॥",
-];
+const mantraLines = ["ॐ", "शान्तिः शान्तिः शान्तिः॥"];
 
 export default function ShantiMantraScreen() {
   const navigation = useNavigation();
@@ -26,12 +24,16 @@ export default function ShantiMantraScreen() {
   const fadeAnims = useRef(
     mantraLines.map(() => new Animated.Value(0))
   ).current;
+  const startTimeRef = useRef(null);
+  const { updateMeditationSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
 
   const startChanting = async () => {
+    startTimeRef.current = Date.now(); // track session start
+
     setIsRunning(true);
 
     if (!soundRef.current) {
@@ -59,6 +61,14 @@ export default function ShantiMantraScreen() {
   };
 
   const stopChanting = async () => {
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateMeditationSession("Shanti Mantra", duration);
+
     // Fade out all lines in parallel
     Animated.parallel(
       fadeAnims.map((anim) =>

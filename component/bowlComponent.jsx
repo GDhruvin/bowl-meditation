@@ -17,10 +17,8 @@ import {
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModel from "../Model/infoModal";
-import { useLocalData } from "../hooks/useLocalData";
 
 export default function BowlComponent() {
-  const { instruments } = useLocalData();
   const [bowlSound, setBowlSound] = useState(null);
   const [meditateSound, setMeditateSound] = useState(null);
   const [hasTappedBowl, setHasTappedBowl] = useState(false);

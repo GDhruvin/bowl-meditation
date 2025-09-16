@@ -14,11 +14,9 @@ import { LongPressGestureHandler } from "react-native-gesture-handler";
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModel from "../Model/infoModal";
-import { useLocalData } from "../hooks/useLocalData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BellComponent() {
-  const { instruments } = useLocalData();
   const soundRef = useRef(null);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -41,6 +39,7 @@ export default function BellComponent() {
     };
     checkFirstUse();
   }, []);
+
   // Load sound file
   const loadSound = async () => {
     try {

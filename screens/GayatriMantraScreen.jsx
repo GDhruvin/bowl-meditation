@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    ImageBackground,
-    StyleSheet,
-    Animated,
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  StyleSheet,
+  Animated,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 const mantraLines = [
   "ॐ भूर्भुवः स्वः",
@@ -28,12 +29,16 @@ export default function GayatriMantraScreen() {
   const fadeAnims = useRef(
     mantraLines.map(() => new Animated.Value(0))
   ).current;
+  const startTimeRef = useRef(null);
+  const { updateMeditationSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
 
   const startChanting = async () => {
+    startTimeRef.current = Date.now(); // track session start
+
     setIsRunning(true);
 
     if (!soundRef.current) {
@@ -61,6 +66,14 @@ export default function GayatriMantraScreen() {
   };
 
   const stopChanting = async () => {
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateMeditationSession("Om Chanting", duration);
+
     // Fade out all lines in parallel
     Animated.parallel(
       fadeAnims.map((anim) =>
@@ -105,7 +118,7 @@ export default function GayatriMantraScreen() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Shanti Mantra</Text>
+          <Text style={styles.headerTitle}>Gaytri Mantra</Text>
           <View style={{ width: 24 }} />
         </View>
 

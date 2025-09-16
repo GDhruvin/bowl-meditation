@@ -12,11 +12,9 @@ import { Audio } from "expo-av";
 import InstructionModal from "../Model/InstructionModal";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModel from "../Model/infoModal";
-import { useLocalData } from "../hooks/useLocalData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function GongComponent() {
-  const { instruments } = useLocalData();
   const soundRef = useRef(new Audio.Sound());
   const [isLoading, setIsLoading] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);

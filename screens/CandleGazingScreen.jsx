@@ -3,17 +3,34 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Video } from "expo-av";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function CandleGazingScreen() {
   const navigation = useNavigation();
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const videoRef = useRef(null); // Reference to control the Video component
+  const { updateMeditationSession } = useLocalData();
+  const startTimeRef = useRef(null);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
+
+  useEffect(() => {
+    startTimeRef.current = Date.now(); // track session start
+
+    return async () => {
+      // Calculate session duration
+      const duration = startTimeRef.current
+        ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+        : 0;
+
+      // Save session
+      await updateMeditationSession("Candle Gazing", duration);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -85,7 +102,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: 1, 
+    zIndex: 1,
   },
   content: {
     flex: 1,

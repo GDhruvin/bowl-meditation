@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 const mantraLines = [
   "ॐ त्र्य॑म्बकं यजामहे सु॒गन्धिं॑ पुष्टि॒वर्ध॑नम् ।",
@@ -26,12 +27,16 @@ export default function MrityunjayaMantraScreen() {
   const fadeAnims = useRef(
     mantraLines.map(() => new Animated.Value(0))
   ).current;
+  const startTimeRef = useRef(null);
+  const { updateMeditationSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
   };
 
   const startChanting = async () => {
+    startTimeRef.current = Date.now(); // track session start
+
     setIsRunning(true);
 
     if (!soundRef.current) {
@@ -59,6 +64,14 @@ export default function MrityunjayaMantraScreen() {
   };
 
   const stopChanting = async () => {
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateMeditationSession("Maha Mrityunjaya Mantra", duration);
+
     // Fade out all lines in parallel
     Animated.parallel(
       fadeAnims.map((anim) =>
