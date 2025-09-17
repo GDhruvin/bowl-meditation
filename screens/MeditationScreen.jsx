@@ -43,7 +43,6 @@ const meditations = [
   },
 ];
 
-
 export default function MeditationScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.card} activeOpacity={1}>
@@ -76,6 +75,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#1C2526",
+    paddingBottom: "80%",
   },
   header: {
     fontSize: 24,
