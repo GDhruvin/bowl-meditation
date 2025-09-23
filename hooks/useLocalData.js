@@ -12,15 +12,9 @@ const INSTRUMENT_KEYS = {
 
 const DEFAULT_LOCAL_DATA = {
   instrument: INSTRUMENT_KEYS,
-  meditation: {
-    exercises: [],
-  },
-  breathing: {
-    exercises: [],
-  },
-  yoga: {
-    exercises: [],
-  },
+  meditation: [],
+  breathing: [],
+  yoga: [],
 };
 
 export const useLocalData = () => {
@@ -76,6 +70,54 @@ export const useLocalData = () => {
       const existingIndex = exercises.findIndex((e) => e.name === exerciseName);
 
       if (existingIndex !== -1) {
+        // Existing meditation exercise
+        const existing = exercises[existingIndex];
+        existing.totalDuration += duration;
+        existing.lastUsed = new Date().toISOString();
+
+        // Check if today's session already exists
+        const todaySession = existing.sessionsByDate.find(
+          (s) => s.date === today
+        );
+
+        if (todaySession) {
+          todaySession.sessionCount += 1;
+        } else {
+          existing.sessionsByDate.push({ date: today, sessionCount: 1 });
+        }
+
+        exercises[existingIndex] = existing;
+      } else {
+        // New meditation exercise
+        exercises.push({
+          name: exerciseName,
+          totalDuration: duration,
+          lastUsed: new Date().toISOString(),
+          sessionsByDate: [{ date: today, sessionCount: 1 }],
+        });
+      }
+
+      parsed.meditation.exercises = exercises;
+
+      await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
+      console.log("✅ Meditation updated:", parsed.meditation.exercises);
+    } catch (error) {
+      console.error("❌ Failed to update meditation:", error);
+    }
+  };
+
+  const updateYogaSession = async (exerciseName, duration = 0) => {
+    try {
+      const storedData = await AsyncStorage.getItem("appLocalData");
+      const parsed = storedData ? JSON.parse(storedData) : null;
+      if (!parsed) return;
+
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const exercises = parsed.yoga.exercises || [];
+
+      const existingIndex = exercises.findIndex((e) => e.name === exerciseName);
+
+      if (existingIndex !== -1) {
         const existing = exercises[existingIndex];
         existing.sessionCount += 1;
         existing.totalDuration += duration;
@@ -94,12 +136,59 @@ export const useLocalData = () => {
         });
       }
 
-      parsed.meditation.exercises = exercises;
+      parsed.yoga.exercises = exercises;
 
       await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
-      console.log("✅ Meditation updated:", parsed.meditation.exercises);
+      console.log("✅ Yoga updated:", parsed.yoga.exercises);
     } catch (error) {
-      console.error("❌ Failed to update meditation:", error);
+      console.error("❌ Failed to update yoga:", error);
+    }
+  };
+
+  const updateSession = async (category, exerciseName, duration = 0) => {
+    try {
+      const storedData = await AsyncStorage.getItem("appLocalData");
+      const parsed = storedData ? JSON.parse(storedData) : {};
+
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const exercises = parsed[category] || [];
+
+      const existingIndex = exercises.findIndex((e) => e.name === exerciseName);
+
+      if (existingIndex !== -1) {
+        const existing = exercises[existingIndex];
+        existing.sessionCount += 1;
+        existing.totalDuration += duration;
+        existing.lastUsed = new Date().toISOString();
+
+        // 🔹 update sessionsByDate
+        if (!existing.sessionsByDate) existing.sessionsByDate = [];
+        const dateIndex = existing.sessionsByDate.findIndex(
+          (d) => d.date === today
+        );
+        if (dateIndex !== -1) {
+          existing.sessionsByDate[dateIndex].sessionCount += 1;
+        } else {
+          existing.sessionsByDate.push({ date: today, sessionCount: 1 });
+        }
+
+        exercises[existingIndex] = existing;
+      } else {
+        exercises.push({
+          name: exerciseName,
+          sessionCount: 1,
+          totalDuration: duration,
+          lastUsed: new Date().toISOString(),
+          sessionsByDate: [{ date: today, sessionCount: 1 }],
+        });
+      }
+
+      parsed[category] = exercises;
+
+      await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
+      console.log(`✅ ${category} updated:`, parsed[category]);
+    } catch (error) {
+      console.error(`❌ Failed to update ${category}:`, error);
     }
   };
 
@@ -108,5 +197,7 @@ export const useLocalData = () => {
     initializeLocalData,
     clearAll,
     updateMeditationSession,
+    updateYogaSession,
+    updateSession,
   };
 };

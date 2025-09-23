@@ -38,7 +38,7 @@ export default function BowlComponent() {
           ? JSON.parse(storedData)
           : { instruments: {} };
 
-        if (!parsed["instrument"]["hasUsed_Bowl"]) {
+        if (!storedData || !parsed["instrument"]["hasUsed_Bowl"]) {
           setShowInstructions(true);
         }
       } catch (error) {

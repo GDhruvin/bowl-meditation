@@ -22,7 +22,7 @@ export default function SoHumMantraScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current; // For fade animation
   const translateYAnim = useRef(new Animated.Value(50)).current; // For upward movement
   const startTimeRef = useRef(null);
-  const { updateMeditationSession } = useLocalData();
+  const { updateSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -59,14 +59,16 @@ export default function SoHumMantraScreen() {
     }
   };
 
-  const stopChanting = async () => {
+  const stopChanting = async (saveSession = true) => {
     // Calculate session duration
     const duration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateMeditationSession("So Hum Mantra", duration);
+    if (saveSession) {
+      // Save session only if explicitly allowed
+      await updateSession("meditation", "So Hum Mantra", duration);
+    }
 
     // Start fade out animation
     Animated.timing(fadeAnim, {
@@ -93,7 +95,7 @@ export default function SoHumMantraScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 

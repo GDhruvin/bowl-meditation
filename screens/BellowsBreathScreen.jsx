@@ -13,9 +13,11 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function BellowsBreathScreen() {
   const navigation = useNavigation();
+  const { updateSession } = useLocalData();
   const [isRunning, setIsRunning] = useState(false);
   const [repCount, setRepCount] = useState(0);
   const [round, setRound] = useState(1);
@@ -24,6 +26,7 @@ export default function BellowsBreathScreen() {
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const intervalRef = useRef(null);
+  const startTimeRef = useRef(null);
 
   const maxReps = 30;
   const maxRounds = 3;
@@ -62,6 +65,8 @@ export default function BellowsBreathScreen() {
     setRepCount(0);
     speak(`Round ${round} Start`);
 
+    startTimeRef.current = Date.now(); // track session start
+
     intervalRef.current = setInterval(() => {
       setRepCount((prev) => {
         animatePulse();
@@ -89,12 +94,20 @@ export default function BellowsBreathScreen() {
     }
   };
 
-  const stopBreathing = () => {
+  const stopBreathing = async () => {
     clearInterval(intervalRef.current);
     setIsRunning(false);
     setRepCount(0);
     setRound(1);
     Speech.stop();
+
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateSession("breathing", "Bellows Breath", duration);
   };
 
   useEffect(() => {

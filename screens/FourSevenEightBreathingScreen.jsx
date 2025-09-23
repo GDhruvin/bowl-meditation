@@ -13,9 +13,11 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function FourSevenEightBreathingScreen() {
   const navigation = useNavigation();
+  const { updateSession } = useLocalData();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isRunning, setIsRunning] = useState(false);
   const [phase, setPhase] = useState("Ready");
@@ -29,6 +31,7 @@ export default function FourSevenEightBreathingScreen() {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
+  const startTimeRef = useRef(null);
 
   const animateAndSchedule = (index) => {
     const currentPhase = phases[index];
@@ -65,13 +68,24 @@ export default function FourSevenEightBreathingScreen() {
   const startBreathing = () => {
     setIsRunning(true);
     animateAndSchedule(phaseIndex); // kick off the first phase
+
+    // Save session
+    startTimeRef.current = Date.now(); // track session start
   };
 
-  const stopBreathing = () => {
+  const stopBreathing = async () => {
     setIsRunning(false);
     clearTimeout(timeoutRef.current);
     setPhase("Ready");
     setPhaseIndex(0);
+
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateSession("breathing", "4-7-8 Breathing", duration);
 
     Animated.timing(scaleAnim, {
       toValue: 1,

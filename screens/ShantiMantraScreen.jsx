@@ -25,7 +25,7 @@ export default function ShantiMantraScreen() {
     mantraLines.map(() => new Animated.Value(0))
   ).current;
   const startTimeRef = useRef(null);
-  const { updateMeditationSession } = useLocalData();
+  const { updateSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -60,14 +60,16 @@ export default function ShantiMantraScreen() {
     }
   };
 
-  const stopChanting = async () => {
+  const stopChanting = async (saveSession = true) => {
     // Calculate session duration
     const duration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateMeditationSession("Shanti Mantra", duration);
+    if (saveSession) {
+      // Save session
+      await updateSession("meditation", "Shanti Mantra", duration);
+    }
 
     // Fade out all lines in parallel
     Animated.parallel(
@@ -97,7 +99,7 @@ export default function ShantiMantraScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 

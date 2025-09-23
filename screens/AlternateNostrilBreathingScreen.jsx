@@ -13,14 +13,17 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function AlternateNostrilBreathingScreen() {
   const navigation = useNavigation();
+  const { updateSession } = useLocalData();
   const [isRunning, setIsRunning] = useState(false);
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const intervalRef = useRef(null);
+  const startTimeRef = useRef(null);
 
   const duration = 5000;
   const rhombusSize = 200;
@@ -96,6 +99,9 @@ export default function AlternateNostrilBreathingScreen() {
     setIsRunning(true);
     animatePhase(phaseIndex);
 
+    // Save session
+    startTimeRef.current = Date.now(); // track session start
+
     intervalRef.current = setInterval(() => {
       setPhaseIndex((prev) => {
         const next = (prev + 1) % phases.length;
@@ -105,10 +111,19 @@ export default function AlternateNostrilBreathingScreen() {
     }, duration);
   };
 
-  const stopBreathing = () => {
+  const stopBreathing = async () => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
     setPhaseIndex(0);
+
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateSession("breathing", "Alternate Nostril Breathing", duration);
+
     Speech.stop();
     Animated.timing(ballPosition, {
       toValue: points[1], // Reset to top (point 1)

@@ -13,9 +13,11 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalData } from "../hooks/useLocalData";
 
 export default function BoxBreathingScreen() {
   const navigation = useNavigation();
+  const { updateSession } = useLocalData();
   const ballPosition = useRef(new Animated.ValueXY({ x: -20, y: -20 })).current;
   const [isRunning, setIsRunning] = useState(false);
   const [phase, setPhase] = useState("Ready");
@@ -26,6 +28,7 @@ export default function BoxBreathingScreen() {
   const duration = 4000;
   const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
+  const startTimeRef = useRef(null);
 
   const [targetPosition, setTargetPosition] = useState({ x: -20, y: -20 });
 
@@ -75,6 +78,8 @@ export default function BoxBreathingScreen() {
   const startBreathing = () => {
     setIsRunning(true);
     animatePhase(phaseIndex);
+    startTimeRef.current = Date.now(); // track session start
+
     intervalRef.current = setInterval(() => {
       setPhaseIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) % phases.length;
@@ -84,11 +89,20 @@ export default function BoxBreathingScreen() {
     }, duration);
   };
 
-  const stopBreathing = () => {
+  const stopBreathing = async () => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
     setPhase("Ready");
     setPhaseIndex(0);
+
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    await updateSession("breathing", "Box Breathing", duration);
+
     Animated.timing(ballPosition, {
       toValue: { x: -20, y: -20 },
       duration: 100,

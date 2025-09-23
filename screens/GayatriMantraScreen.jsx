@@ -30,7 +30,7 @@ export default function GayatriMantraScreen() {
     mantraLines.map(() => new Animated.Value(0))
   ).current;
   const startTimeRef = useRef(null);
-  const { updateMeditationSession } = useLocalData();
+  const { updateSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -65,14 +65,16 @@ export default function GayatriMantraScreen() {
     }
   };
 
-  const stopChanting = async () => {
+  const stopChanting = async (saveSession = true) => {
     // Calculate session duration
     const duration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateMeditationSession("Om Chanting", duration);
+    if (saveSession) {
+      // Save session
+      await updateSession("meditation", "Gaytri Mantra", duration);
+    }
 
     // Fade out all lines in parallel
     Animated.parallel(
@@ -102,7 +104,7 @@ export default function GayatriMantraScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 

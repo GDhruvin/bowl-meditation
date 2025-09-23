@@ -28,7 +28,7 @@ export default function MrityunjayaMantraScreen() {
     mantraLines.map(() => new Animated.Value(0))
   ).current;
   const startTimeRef = useRef(null);
-  const { updateMeditationSession } = useLocalData();
+  const { updateSession } = useLocalData();
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -63,14 +63,16 @@ export default function MrityunjayaMantraScreen() {
     }
   };
 
-  const stopChanting = async () => {
+  const stopChanting = async (saveSession = true) => {
     // Calculate session duration
     const duration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateMeditationSession("Maha Mrityunjaya Mantra", duration);
+    if (saveSession) {
+      // Save session
+      await updateSession("meditation", "Maha Mrityunjaya Mantra", duration);
+    }
 
     // Fade out all lines in parallel
     Animated.parallel(
@@ -100,7 +102,7 @@ export default function MrityunjayaMantraScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 

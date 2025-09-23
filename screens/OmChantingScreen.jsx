@@ -16,7 +16,7 @@ import { useLocalData } from "../hooks/useLocalData";
 
 export default function OmChantingScreen() {
   const navigation = useNavigation();
-  const { updateMeditationSession } = useLocalData();
+  const { updateSession } = useLocalData();
   const [isRunning, setIsRunning] = useState(false);
   const soundRef = useRef(null);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
@@ -58,14 +58,16 @@ export default function OmChantingScreen() {
     }
   };
 
-  const stopChanting = async () => {
+  const stopChanting = async (saveSession = true) => {
     // Calculate session duration
     const duration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateMeditationSession("Om Chanting", duration);
+    if (saveSession) {
+      // Save session
+      await updateSession("meditation", "Om Chanting", duration);
+    }
 
     // Start fade out animation
     Animated.timing(fadeAnim, {
@@ -92,7 +94,7 @@ export default function OmChantingScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 

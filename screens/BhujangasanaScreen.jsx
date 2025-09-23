@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
@@ -46,11 +47,13 @@ const yogaSteps = [
 
 export default function BhujangasanaScreen() {
   const navigation = useNavigation();
+  const { updateSession } = useLocalData();
   const [isRunning, setIsRunning] = useState(false);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const stepTimerRef = useRef(null);
+  const startTimeRef = useRef(null);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -67,6 +70,7 @@ export default function BhujangasanaScreen() {
     setIsRunning(true);
     setCurrentStep(0);
     speakStep(yogaSteps[0].text);
+    startTimeRef.current = Date.now(); // track session start
 
     stepTimerRef.current = setInterval(() => {
       setCurrentStep((prev) => {
@@ -86,7 +90,18 @@ export default function BhujangasanaScreen() {
     }, 8000);
   };
 
-  const stopChanting = () => {
+  const stopChanting = async (saveSession = true) => {
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    // Save session
+    if (saveSession) {
+      // Save session only if explicitly allowed
+      await updateSession("yoga", "Bhujangasana", duration);
+    }
+
     setIsRunning(false);
     clearInterval(stepTimerRef.current);
     Speech.stop();
@@ -94,7 +109,7 @@ export default function BhujangasanaScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 
@@ -119,7 +134,7 @@ export default function BhujangasanaScreen() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Vrikshasana (Cobra Pose)</Text>
+          <Text style={styles.headerTitle}>Bhujangasana (Cobra Pose)</Text>
           <View style={{ width: 24 }} />
         </View>
 

@@ -11,7 +11,7 @@ export default function CandleGazingScreen() {
   const navigation = useNavigation();
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const videoRef = useRef(null); // Reference to control the Video component
-  const { updateMeditationSession } = useLocalData();
+  const { updateSession } = useLocalData();
   const startTimeRef = useRef(null);
 
   const toggleMusicModal = () => {
@@ -28,7 +28,7 @@ export default function CandleGazingScreen() {
         : 0;
 
       // Save session
-      await updateMeditationSession("Candle Gazing", duration);
+      await updateSession("meditation", "Candle Gazing", duration);
     };
   }, []);
 

@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Speech from "expo-speech";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
+import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
@@ -46,11 +47,13 @@ const yogaSteps = [
 
 export default function PaschimottanasanaScreen() {
   const navigation = useNavigation();
+  const { updateSession } = useLocalData();
   const [isRunning, setIsRunning] = useState(false);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const stepTimerRef = useRef(null);
+  const startTimeRef = useRef(null);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -67,6 +70,7 @@ export default function PaschimottanasanaScreen() {
     setIsRunning(true);
     setCurrentStep(0);
     speakStep(yogaSteps[0].text);
+    startTimeRef.current = Date.now(); // track session start
 
     stepTimerRef.current = setInterval(() => {
       setCurrentStep((prev) => {
@@ -86,7 +90,17 @@ export default function PaschimottanasanaScreen() {
     }, 10000);
   };
 
-  const stopChanting = () => {
+  const stopChanting = async (saveSession = true) => {
+    // Calculate session duration
+    const duration = startTimeRef.current
+      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+      : 0;
+
+    if (saveSession) {
+      // Save session
+      await updateSession("yoga", "Paschimottanasana", duration);
+    }
+
     setIsRunning(false);
     clearInterval(stepTimerRef.current);
     Speech.stop();
@@ -94,7 +108,7 @@ export default function PaschimottanasanaScreen() {
 
   useEffect(() => {
     return () => {
-      stopChanting();
+      stopChanting(false);
     };
   }, []);
 
