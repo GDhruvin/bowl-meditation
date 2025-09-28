@@ -11,7 +11,15 @@ const INSTRUMENT_KEYS = {
 };
 
 const DEFAULT_LOCAL_DATA = {
-  instrument: INSTRUMENT_KEYS,
+  instrument: {
+    hasUsed_Bell: true,
+    hasUsed_Bowl: true,
+    hasUsed_Gong: true,
+    hasUsed_HandPan: true,
+    hasUsed_OceanDrum: true,
+    hasUsed_TuningFork: true,
+    sessions: [],
+  },
   meditation: [],
   breathing: [],
   yoga: [],
