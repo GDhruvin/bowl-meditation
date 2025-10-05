@@ -45,9 +45,11 @@ export default function TabNavigator() {
           elevation: 0,
           borderColor: "#121212",
           backgroundColor: "#121212",
-          borderRadius: 30,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
           height: 80,
-          paddingHorizontal: 10,
           ...styles.shadow,
         },
         tabBarIcon: ({ focused }) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,10 +6,14 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import {
   BarChart,
   PieChart,
@@ -21,9 +25,14 @@ const screenWidth = Dimensions.get("window").width;
 
 export default function AnalysisScreen() {
   const [localData, setLocalData] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    description: "",
+  });
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const fetchData = async () => {
         try {
           const stored = await AsyncStorage.getItem("appLocalData");
@@ -47,6 +56,65 @@ export default function AnalysisScreen() {
       month: "short",
       day: "numeric",
     });
+  };
+
+  // Section descriptions for the modal
+  const sectionDescriptions = {
+    "Session Counts by Category": {
+      title: "Session Counts by Category",
+      description:
+        "This bar chart shows the total number of sessions completed for each category (Meditation, Breathing, Yoga). It helps you understand which type of activity you’ve performed most frequently.",
+    },
+    "Duration Distribution": {
+      title: "Duration Distribution",
+      description:
+        "This pie chart displays the total duration (in minutes) spent on each category. It shows the proportion of time dedicated to Meditation, Breathing, and Yoga.",
+    },
+    "Sessions Over Time": {
+      title: "Sessions Over Time",
+      description:
+        "This line chart tracks the number of sessions for each category over time, with dates on the x-axis. It helps you see trends in your activity frequency.",
+    },
+    "Sessions by Activity": {
+      title: "Sessions by Activity",
+      description:
+        "This stacked bar chart breaks down the number of sessions for each activity within the Meditation, Breathing, and Yoga categories. Each bar represents a category, with segments showing individual activities.",
+    },
+    "Cumulative Duration Over Time": {
+      title: "Cumulative Duration Over Time",
+      description:
+        "This area chart shows the cumulative duration (in minutes) for each category over time. It illustrates how your time spent on activities accumulates day by day.",
+    },
+    "Sessions by Day of Week": {
+      title: "Sessions by Day of Week",
+      description:
+        "This donut chart displays the total number of sessions completed on each day of the week across all categories. It helps identify which days you’re most active.",
+    },
+    Meditation: {
+      title: "Meditation",
+      description:
+        "This section lists details about your meditation activities, including session counts, total duration, last used date, and sessions by date. It provides a detailed breakdown of your meditation practice.",
+    },
+    Breathing: {
+      title: "Breathing",
+      description:
+        "This section lists details about your breathing exercises, including session counts, total duration, last used date, and sessions by date. It provides a detailed breakdown of your breathing practice.",
+    },
+    Yoga: {
+      title: "Yoga",
+      description:
+        "This section lists details about your yoga sessions, including session counts, total duration, last used date, and sessions by date. It provides a detailed breakdown of your yoga practice.",
+    },
+  };
+
+  const openModal = (sectionTitle) => {
+    setModalContent(
+      sectionDescriptions[sectionTitle] || {
+        title: sectionTitle,
+        description: "No description available.",
+      }
+    );
+    setModalVisible(true);
   };
 
   const prepareChartData = () => {
@@ -318,7 +386,12 @@ export default function AnalysisScreen() {
     if (!data || data.length === 0) {
       return (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{title}</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.sectionTitle}>{title}</Text>
+            <TouchableOpacity onPress={() => openModal(title)}>
+              <Ionicons name="help-circle-outline" size={24} color="#4CAF50" />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.noDataText}>
             No {title.toLowerCase()} data available
           </Text>
@@ -328,7 +401,12 @@ export default function AnalysisScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{title}</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.sectionTitle}>{title}</Text>
+          <TouchableOpacity onPress={() => openModal(title)}>
+            <Ionicons name="help-circle-outline" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -344,14 +422,12 @@ export default function AnalysisScreen() {
                 Sessions:{" "}
                 <Text style={{ color: "#4CAF50" }}>{item.sessionCount}</Text>
               </Text>
-
               <Text style={styles.itemDetail}>
                 Total Duration:{" "}
                 <Text style={{ color: "#2196F3" }}>
                   {item.totalDuration} min
                 </Text>
               </Text>
-
               <Text style={styles.itemDetail}>
                 Last Used:{" "}
                 <Text style={{ color: "#FF9800" }}>
@@ -410,9 +486,20 @@ export default function AnalysisScreen() {
         {localData && chartData ? (
           <>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                Session Counts by Category
-              </Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.sectionTitle}>
+                  Session Counts by Category
+                </Text>
+                <TouchableOpacity
+                  onPress={() => openModal("Session Counts by Category")}
+                >
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={24}
+                    color="#4CAF50"
+                  />
+                </TouchableOpacity>
+              </View>
               <BarChart
                 data={chartData.barData}
                 width={screenWidth - 40}
@@ -430,7 +517,18 @@ export default function AnalysisScreen() {
               />
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Duration Distribution</Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.sectionTitle}>Duration Distribution</Text>
+                <TouchableOpacity
+                  onPress={() => openModal("Duration Distribution")}
+                >
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={24}
+                    color="#4CAF50"
+                  />
+                </TouchableOpacity>
+              </View>
               <PieChart
                 data={chartData.pieData}
                 width={screenWidth - 40}
@@ -443,7 +541,18 @@ export default function AnalysisScreen() {
               />
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions Over Time</Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.sectionTitle}>Sessions Over Time</Text>
+                <TouchableOpacity
+                  onPress={() => openModal("Sessions Over Time")}
+                >
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={24}
+                    color="#4CAF50"
+                  />
+                </TouchableOpacity>
+              </View>
               <LineChart
                 data={chartData.lineData}
                 width={screenWidth - 40}
@@ -454,7 +563,18 @@ export default function AnalysisScreen() {
               />
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Activity</Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.sectionTitle}>Sessions by Activity</Text>
+                <TouchableOpacity
+                  onPress={() => openModal("Sessions by Activity")}
+                >
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={24}
+                    color="#4CAF50"
+                  />
+                </TouchableOpacity>
+              </View>
               <StackedBarChart
                 data={chartData.stackedBarData}
                 width={screenWidth - 40}
@@ -468,9 +588,20 @@ export default function AnalysisScreen() {
               />
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                Cumulative Duration Over Time
-              </Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.sectionTitle}>
+                  Cumulative Duration Over Time
+                </Text>
+                <TouchableOpacity
+                  onPress={() => openModal("Cumulative Duration Over Time")}
+                >
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={24}
+                    color="#4CAF50"
+                  />
+                </TouchableOpacity>
+              </View>
               <LineChart
                 data={chartData.areaData}
                 width={screenWidth - 40}
@@ -485,7 +616,18 @@ export default function AnalysisScreen() {
               />
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Day of Week</Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.sectionTitle}>Sessions by Day of Week</Text>
+                <TouchableOpacity
+                  onPress={() => openModal("Sessions by Day of Week")}
+                >
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={24}
+                    color="#4CAF50"
+                  />
+                </TouchableOpacity>
+              </View>
               <PieChart
                 data={chartData.donutData}
                 width={screenWidth - 40}
@@ -510,6 +652,29 @@ export default function AnalysisScreen() {
           </View>
         )}
       </ScrollView>
+
+      {/* Modal for Section Information */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>{modalContent.title}</Text>
+            <Text style={styles.modalDescription}>
+              {modalContent.description}
+            </Text>
+            <Pressable
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -595,5 +760,49 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 600,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "#2A3439",
+    borderRadius: 12,
+    padding: 20,
+    width: screenWidth - 40,
+    maxHeight: 300,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4CAF50",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  modalDescription: {
+    fontSize: 14,
+    color: "#B0BEC5",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "600",
   },
 });

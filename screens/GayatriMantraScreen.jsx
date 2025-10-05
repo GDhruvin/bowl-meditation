@@ -15,10 +15,13 @@ import { BackgroundMusicModal } from "../component/backgroundMusicModel";
 import { useLocalData } from "../hooks/useLocalData";
 
 const mantraLines = [
-  "ॐ भूर्भुवः स्वः",
-  "तत्स॑वि॒तुर्वरे॑ण्यं॒",
-  "भर्गो॑ दे॒वस्य॑ धीमहि।",
-  "धियो॒ यो नः॑ प्रचो॒दया॑त्॥",
+  { sanskrit: "ॐ भूर्भुवः स्वः", english: "Om Bhur Bhuvah Svah" },
+  { sanskrit: "तत्स॑वि॒तुर्वरे॑ण्यं॒", english: "Tat Savitur Varenyam" },
+  { sanskrit: "भर्गो॑ दे॒वस्य॑ धीमहि।", english: "Bhargo Devasya Dhimahi" },
+  {
+    sanskrit: "धियो॒ यो नः॑ प्रचो॒दया॑त्॥",
+    english: "Dhiyo Yo Nah Prachodayat",
+  },
 ];
 
 export default function GayatriMantraScreen() {
@@ -136,14 +139,33 @@ export default function GayatriMantraScreen() {
           </View>
           {isRunning && (
             <View style={styles.mantraContainer}>
-              {mantraLines.map((line, index) => (
-                <Animated.Text
-                  key={index}
-                  style={[styles.mantraText, { opacity: fadeAnims[index] }]}
-                >
-                  {line}
-                </Animated.Text>
-              ))}
+              {isRunning && (
+                <View style={styles.mantraContainer}>
+                  {mantraLines.map((line, index) => (
+                    <View
+                      key={index}
+                      style={{ alignItems: "center", marginVertical: 5 }}
+                    >
+                      <Animated.Text
+                        style={[
+                          styles.mantraText,
+                          { opacity: fadeAnims[index] },
+                        ]}
+                      >
+                        {line.sanskrit}
+                      </Animated.Text>
+                      <Animated.Text
+                        style={[
+                          styles.mantraEnglish,
+                          { opacity: fadeAnims[index] },
+                        ]}
+                      >
+                        {line.english}
+                      </Animated.Text>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
           )}
         </View>
@@ -209,6 +231,13 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: "center",
     marginVertical: 5,
+  },
+  mantraEnglish: {
+    color: "gray",
+    fontSize: 18,
+    textAlign: "center",
+    opacity: 0.85,
+    marginTop: 2,
   },
   buttonContainer: {
     paddingHorizontal: 20,

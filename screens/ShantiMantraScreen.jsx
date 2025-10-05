@@ -14,7 +14,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BackgroundMusicModal } from "../component/backgroundMusicModel";
 import { useLocalData } from "../hooks/useLocalData";
 
-const mantraLines = ["ॐ", "शान्तिः शान्तिः शान्तिः॥"];
+const mantraLines = [
+  { sanskrit: "ॐ", english: "Om" },
+  { sanskrit: "शान्तिः शान्तिः", english: "Shantih Shantih" },
+];
 
 export default function ShantiMantraScreen() {
   const navigation = useNavigation();
@@ -132,12 +135,24 @@ export default function ShantiMantraScreen() {
           {isRunning && (
             <View style={styles.mantraContainer}>
               {mantraLines.map((line, index) => (
-                <Animated.Text
+                <View
                   key={index}
-                  style={[styles.mantraText, { opacity: fadeAnims[index] }]}
+                  style={{ alignItems: "center", marginVertical: 5 }}
                 >
-                  {line}
-                </Animated.Text>
+                  <Animated.Text
+                    style={[styles.mantraText, { opacity: fadeAnims[index] }]}
+                  >
+                    {line.sanskrit}
+                  </Animated.Text>
+                  <Animated.Text
+                    style={[
+                      styles.mantraEnglish,
+                      { opacity: fadeAnims[index] },
+                    ]}
+                  >
+                    {`(${line.english})`}
+                  </Animated.Text>
+                </View>
               ))}
             </View>
           )}
@@ -204,6 +219,13 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: "center",
     marginVertical: 5,
+  },
+  mantraEnglish: {
+    color: "gray",
+    fontSize: 19,
+    textAlign: "center",
+    opacity: 0.8,
+    marginTop: 1,
   },
   buttonContainer: {
     paddingHorizontal: 20,

@@ -41,16 +41,40 @@ export const useLocalData = () => {
   const initializeLocalData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("appLocalData");
-      console.log("storedData", storedData);
 
       if (!storedData) {
-        await AsyncStorage.setItem(
-          "appLocalData",
-          JSON.stringify(DEFAULT_LOCAL_DATA)
-        );
+        // First time initialization
+        const initialData = {
+          ...DEFAULT_LOCAL_DATA,
+          lastResetMonth: new Date().getMonth(), // track month
+        };
+        await AsyncStorage.setItem("appLocalData", JSON.stringify(initialData));
         console.log("Initialized AsyncStorage with default local data ✅");
       } else {
-        console.log("appLocalData already exists ✅");
+        let parsed = JSON.parse(storedData);
+        const currentMonth = new Date().getMonth();
+
+        // If data does not have month info, initialize it
+        if (parsed.lastResetMonth === undefined) {
+          parsed.lastResetMonth = currentMonth;
+          await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
+          console.log("Added lastResetMonth field ✅");
+        }
+
+        // 🔹 Reset meditation, breathing, yoga when month changes
+        if (parsed.lastResetMonth !== currentMonth) {
+          parsed = {
+            ...parsed,
+            meditation: [],
+            breathing: [],
+            yoga: [],
+            lastResetMonth: currentMonth, // update month
+          };
+          await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
+          console.log("Monthly reset done ✅");
+        } else {
+          console.log("appLocalData already exists for this month ✅");
+        }
       }
     } catch (error) {
       console.error("Failed to initialize AsyncStorage:", error);
@@ -63,93 +87,6 @@ export const useLocalData = () => {
       console.log("✅ AsyncStorage cleared");
     } catch (e) {
       console.error("Failed to clear AsyncStorage:", e);
-    }
-  };
-
-  const updateMeditationSession = async (exerciseName, duration = 0) => {
-    try {
-      const storedData = await AsyncStorage.getItem("appLocalData");
-      const parsed = storedData ? JSON.parse(storedData) : null;
-      if (!parsed) return;
-
-      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-      const exercises = parsed.meditation.exercises || [];
-
-      const existingIndex = exercises.findIndex((e) => e.name === exerciseName);
-
-      if (existingIndex !== -1) {
-        // Existing meditation exercise
-        const existing = exercises[existingIndex];
-        existing.totalDuration += duration;
-        existing.lastUsed = new Date().toISOString();
-
-        // Check if today's session already exists
-        const todaySession = existing.sessionsByDate.find(
-          (s) => s.date === today
-        );
-
-        if (todaySession) {
-          todaySession.sessionCount += 1;
-        } else {
-          existing.sessionsByDate.push({ date: today, sessionCount: 1 });
-        }
-
-        exercises[existingIndex] = existing;
-      } else {
-        // New meditation exercise
-        exercises.push({
-          name: exerciseName,
-          totalDuration: duration,
-          lastUsed: new Date().toISOString(),
-          sessionsByDate: [{ date: today, sessionCount: 1 }],
-        });
-      }
-
-      parsed.meditation.exercises = exercises;
-
-      await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
-      console.log("✅ Meditation updated:", parsed.meditation.exercises);
-    } catch (error) {
-      console.error("❌ Failed to update meditation:", error);
-    }
-  };
-
-  const updateYogaSession = async (exerciseName, duration = 0) => {
-    try {
-      const storedData = await AsyncStorage.getItem("appLocalData");
-      const parsed = storedData ? JSON.parse(storedData) : null;
-      if (!parsed) return;
-
-      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-      const exercises = parsed.yoga.exercises || [];
-
-      const existingIndex = exercises.findIndex((e) => e.name === exerciseName);
-
-      if (existingIndex !== -1) {
-        const existing = exercises[existingIndex];
-        existing.sessionCount += 1;
-        existing.totalDuration += duration;
-        existing.lastUsed = new Date().toISOString();
-        if (!existing.dates.includes(today)) {
-          existing.dates.push(today);
-        }
-        exercises[existingIndex] = existing;
-      } else {
-        exercises.push({
-          name: exerciseName,
-          sessionCount: 1,
-          totalDuration: duration,
-          lastUsed: new Date().toISOString(),
-          dates: [today],
-        });
-      }
-
-      parsed.yoga.exercises = exercises;
-
-      await AsyncStorage.setItem("appLocalData", JSON.stringify(parsed));
-      console.log("✅ Yoga updated:", parsed.yoga.exercises);
-    } catch (error) {
-      console.error("❌ Failed to update yoga:", error);
     }
   };
 
@@ -169,7 +106,6 @@ export const useLocalData = () => {
         existing.totalDuration += duration;
         existing.lastUsed = new Date().toISOString();
 
-        // 🔹 update sessionsByDate
         if (!existing.sessionsByDate) existing.sessionsByDate = [];
         const dateIndex = existing.sessionsByDate.findIndex(
           (d) => d.date === today
@@ -204,8 +140,6 @@ export const useLocalData = () => {
     updateInstrument,
     initializeLocalData,
     clearAll,
-    updateMeditationSession,
-    updateYogaSession,
     updateSession,
   };
 };
