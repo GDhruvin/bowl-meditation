@@ -35,6 +35,7 @@ export default function MrityunjayaMantraScreen() {
   ).current;
   const startTimeRef = useRef(null);
   const { updateSession } = useLocalData();
+  const isMeditationRunning = useRef(false);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -42,6 +43,7 @@ export default function MrityunjayaMantraScreen() {
 
   const startChanting = async () => {
     startTimeRef.current = Date.now(); // track session start
+    isMeditationRunning.current = true;
 
     setIsRunning(true);
 
@@ -75,7 +77,7 @@ export default function MrityunjayaMantraScreen() {
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    if (saveSession) {
+    if (saveSession || isMeditationRunning.current) {
       // Save session
       await updateSession("meditation", "Maha Mrityunjaya Mantra", duration);
     }
@@ -101,6 +103,7 @@ export default function MrityunjayaMantraScreen() {
         soundRef.current = null;
       }
       setIsRunning(false);
+      isMeditationRunning.current = false;
       // Reset fade values
       fadeAnims.forEach((anim) => anim.setValue(0));
     });

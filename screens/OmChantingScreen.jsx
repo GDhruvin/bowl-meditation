@@ -23,6 +23,7 @@ export default function OmChantingScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current; // For fade animation
   const translateYAnim = useRef(new Animated.Value(50)).current; // For upward movement
   const startTimeRef = useRef(null);
+  const isMeditationRunning = useRef(false);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -30,6 +31,7 @@ export default function OmChantingScreen() {
 
   const startChanting = async () => {
     setIsRunning(true);
+    isMeditationRunning.current = true;
     startTimeRef.current = Date.now(); // track session start
 
     if (!soundRef.current) {
@@ -64,7 +66,7 @@ export default function OmChantingScreen() {
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    if (saveSession) {
+    if (saveSession || isMeditationRunning.current) {
       // Save session
       await updateSession("meditation", "Om Chanting", duration);
     }
@@ -86,6 +88,7 @@ export default function OmChantingScreen() {
         soundRef.current = null;
       }
       setIsRunning(false);
+      isMeditationRunning.current = false;
       // Reset animations
       fadeAnim.setValue(0);
       translateYAnim.setValue(50);

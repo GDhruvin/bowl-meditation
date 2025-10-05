@@ -28,6 +28,7 @@ export default function TriangleBreathingScreen() {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isBreathingRunning = useRef(false);
 
   const triangleSize = 300;
   const ballSize = 40;
@@ -35,7 +36,7 @@ export default function TriangleBreathingScreen() {
   // Calculate triangle vertices
   const triangleHeight = (triangleSize * Math.sqrt(3)) / 2;
   const triangleVertices = [
-    { x: triangleSize / 2 - ballSize / 2, y: 35 }, // Top vertex
+    { x: triangleSize / 2 - ballSize / 2, y: 35 }, // Top
     { x: triangleSize - ballSize, y: triangleHeight - ballSize / 2 }, // Bottom right
     { x: 0, y: triangleHeight - ballSize / 2 }, // Bottom left
   ];
@@ -85,8 +86,10 @@ export default function TriangleBreathingScreen() {
 
   const startBreathing = () => {
     setIsRunning(true);
+    isBreathingRunning.current = true;
+
     animatePhase(phaseIndex);
-    startTimeRef.current = Date.now(); // track session start
+    startTimeRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
       setPhaseIndex((prevIndex) => {
@@ -97,19 +100,23 @@ export default function TriangleBreathingScreen() {
     }, duration);
   };
 
-  const stopBreathing = async () => {
+  const stopBreathing = async (saveSession = true) => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
     setPhase("Ready");
     setPhaseIndex(0);
 
     // Calculate session duration
-    const duration = startTimeRef.current
+    const sessionDuration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateSession("breathing", "Triangle Breathing", duration);
+    // Save session only if running
+    if (saveSession && isBreathingRunning.current) {
+      await updateSession("breathing", "Triangle Breathing", sessionDuration);
+    }
+
+    isBreathingRunning.current = false;
 
     Animated.timing(ballPosition, {
       toValue: triangleVertices[2], // Reset to bottom left
@@ -119,21 +126,20 @@ export default function TriangleBreathingScreen() {
     }).start(() => {
       setTargetPosition(triangleVertices[2]);
     });
+
     Speech.stop();
   };
 
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
-      Speech.stop();
+      stopBreathing(false);
     };
   }, []);
 
   const toggleSpeech = () => {
     setIsSpeechEnabled((prev) => {
-      if (prev) {
-        Speech.stop();
-      }
+      if (prev) Speech.stop();
       return !prev;
     });
   };
@@ -163,6 +169,7 @@ export default function TriangleBreathingScreen() {
           <Text style={styles.headerTitle}>Triangle Breathing</Text>
           <View style={{ width: 24 }} />
         </View>
+
         {/* Animation Triangle */}
         <View style={styles.centerContent}>
           <View style={styles.headerButtons}>
@@ -187,6 +194,7 @@ export default function TriangleBreathingScreen() {
               <Ionicons name="musical-notes" size={24} color="white" />
             </TouchableOpacity>
           </View>
+
           <View
             style={[
               styles.triangle,
@@ -195,7 +203,7 @@ export default function TriangleBreathingScreen() {
           >
             {/* Triangle border using View components */}
             <View style={styles.triangleBorder}>
-              {/* Top to bottom-right line */}
+              {/* Top → bottom-right */}
               <View
                 style={[
                   styles.triangleLine,
@@ -210,7 +218,7 @@ export default function TriangleBreathingScreen() {
                   },
                 ]}
               />
-              {/* Bottom-right to bottom-left line */}
+              {/* Bottom-right → bottom-left */}
               <View
                 style={[
                   styles.triangleLine,
@@ -223,7 +231,7 @@ export default function TriangleBreathingScreen() {
                   },
                 ]}
               />
-              {/* Bottom-left to top line */}
+              {/* Bottom-left → top */}
               <View
                 style={[
                   styles.triangleLine,
@@ -239,6 +247,7 @@ export default function TriangleBreathingScreen() {
                 ]}
               />
             </View>
+
             <Animated.View
               style={[
                 styles.ball,
@@ -254,8 +263,10 @@ export default function TriangleBreathingScreen() {
               ]}
             />
           </View>
+
           <Text style={styles.phaseText}>{phase}</Text>
         </View>
+
         {/* Start/Stop Buttons */}
         <View style={styles.buttonContainer}>
           {isRunning ? (

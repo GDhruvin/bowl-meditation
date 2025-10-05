@@ -22,8 +22,10 @@ export default function AlternateNostrilBreathingScreen() {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
+
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isBreathingRunning = useRef(false);
 
   const duration = 5000;
   const rhombusSize = 200;
@@ -39,17 +41,17 @@ export default function AlternateNostrilBreathingScreen() {
   const ballPosition = useRef(new Animated.ValueXY({ x: 0, y: -r })).current;
 
   const phases = [
-    "Inhale Left", // Move to point 2 (left)
+    "Inhale Left", // Move to point 2
     "Hold", // Stay at point 2
-    "Exhale Right", // Move to point 3 (bottom)
-    "Inhale Right", // Move to point 4 (right)
+    "Exhale Right", // Move to point 3
+    "Inhale Right", // Move to point 4
     "Hold", // Stay at point 4
-    "Exhale Left", // Move to point 1 (top)
+    "Exhale Left", // Move to point 1
   ];
 
   const speak = (text) => {
     if (isSpeechEnabled) {
-      Speech.stop(); // Prevent speech overlap
+      Speech.stop();
       Speech.speak(text, {
         language: "en-US",
         pitch: 1.0,
@@ -64,29 +66,29 @@ export default function AlternateNostrilBreathingScreen() {
     let targetPosition;
 
     switch (index) {
-      case 0: // Inhale Left: Move to point 2 (left)
+      case 0:
         targetPosition = points[2];
-        break;
-      case 1: // Hold: Stay at point 2 (left)
+        break; // Inhale Left
+      case 1:
         targetPosition = points[2];
-        break;
-      case 2: // Exhale Right: Move to point 3 (bottom)
+        break; // Hold
+      case 2:
         targetPosition = points[3];
-        break;
-      case 3: // Inhale Right: Move to point 4 (right)
+        break; // Exhale Right
+      case 3:
         targetPosition = points[4];
-        break;
-      case 4: // Hold: Stay at point 4 (right)
+        break; // Inhale Right
+      case 4:
         targetPosition = points[4];
-        break;
-      case 5: // Exhale Left: Move to point 1 (top)
+        break; // Hold
+      case 5:
         targetPosition = points[1];
-        break;
+        break; // Exhale Left
     }
 
     Animated.timing(ballPosition, {
       toValue: targetPosition,
-      duration: phase.includes("Hold") ? 0 : duration, // No animation for Hold phases
+      duration: phase.includes("Hold") ? 0 : duration,
       easing: Easing.linear,
       useNativeDriver: true,
     }).start();
@@ -95,12 +97,12 @@ export default function AlternateNostrilBreathingScreen() {
   };
 
   const startBreathing = () => {
-    if (isRunning) return; // Prevent multiple starts
+    if (isRunning) return;
     setIsRunning(true);
-    animatePhase(phaseIndex);
+    isBreathingRunning.current = true;
 
-    // Save session
-    startTimeRef.current = Date.now(); // track session start
+    animatePhase(phaseIndex);
+    startTimeRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
       setPhaseIndex((prev) => {
@@ -111,22 +113,29 @@ export default function AlternateNostrilBreathingScreen() {
     }, duration);
   };
 
-  const stopBreathing = async () => {
+  const stopBreathing = async (saveSession = true) => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
     setPhaseIndex(0);
 
     // Calculate session duration
-    const duration = startTimeRef.current
+    const sessionDuration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateSession("breathing", "Alternate Nostril Breathing", duration);
+    if (saveSession && isBreathingRunning.current) {
+      await updateSession(
+        "breathing",
+        "Alternate Nostril Breathing",
+        sessionDuration
+      );
+    }
+
+    isBreathingRunning.current = false;
 
     Speech.stop();
     Animated.timing(ballPosition, {
-      toValue: points[1], // Reset to top (point 1)
+      toValue: points[1],
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -135,7 +144,7 @@ export default function AlternateNostrilBreathingScreen() {
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
-      Speech.stop();
+      stopBreathing(false);
     };
   }, []);
 
@@ -284,7 +293,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderWidth: 5,
     borderColor: "#ffff",
-    transform: [{ rotate: "45deg" }], // Rotate to form rhombus
+    transform: [{ rotate: "45deg" }],
     position: "absolute",
   },
   ball: {

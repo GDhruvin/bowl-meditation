@@ -18,6 +18,7 @@ import { useLocalData } from "../hooks/useLocalData";
 export default function BellowsBreathScreen() {
   const navigation = useNavigation();
   const { updateSession } = useLocalData();
+
   const [isRunning, setIsRunning] = useState(false);
   const [repCount, setRepCount] = useState(0);
   const [round, setRound] = useState(1);
@@ -27,6 +28,7 @@ export default function BellowsBreathScreen() {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isBreathingRunning = useRef(false);
 
   const maxReps = 30;
   const maxRounds = 3;
@@ -34,11 +36,7 @@ export default function BellowsBreathScreen() {
 
   const speak = (text) => {
     if (isSpeechEnabled) {
-      Speech.speak(text, {
-        language: "en-US",
-        pitch: 1,
-        rate: 0.8,
-      });
+      Speech.speak(text, { language: "en-US", pitch: 1, rate: 0.8 });
     }
   };
 
@@ -62,10 +60,11 @@ export default function BellowsBreathScreen() {
 
   const startBreathing = () => {
     setIsRunning(true);
+    isBreathingRunning.current = true;
     setRepCount(0);
-    speak(`Round ${round} Start`);
 
-    startTimeRef.current = Date.now(); // track session start
+    speak(`Round ${round} Start`);
+    startTimeRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
       setRepCount((prev) => {
@@ -94,26 +93,27 @@ export default function BellowsBreathScreen() {
     }
   };
 
-  const stopBreathing = async () => {
+  const stopBreathing = async (saveSession = true) => {
     clearInterval(intervalRef.current);
     setIsRunning(false);
     setRepCount(0);
     setRound(1);
+
+    if (saveSession && isBreathingRunning.current) {
+      const duration = startTimeRef.current
+        ? Math.floor((Date.now() - startTimeRef.current) / 1000)
+        : 0;
+      await updateSession("breathing", "Bellows Breath", duration);
+    }
+
+    isBreathingRunning.current = false;
     Speech.stop();
-
-    // Calculate session duration
-    const duration = startTimeRef.current
-      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
-      : 0;
-
-    // Save session
-    await updateSession("breathing", "Bellows Breath", duration);
   };
 
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
-      Speech.stop();
+      stopBreathing(false);
     };
   }, []);
 
@@ -124,7 +124,6 @@ export default function BellowsBreathScreen() {
       resizeMode="cover"
     >
       <SafeAreaView style={styles.overlay} edges={["top", "left", "right"]}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="white" />
@@ -133,7 +132,6 @@ export default function BellowsBreathScreen() {
           <View style={{ width: 24 }} />
         </View>
 
-        {/* Breathing Animation */}
         <View style={styles.centerContent}>
           <View style={styles.headerButtons}>
             <TouchableOpacity
@@ -159,12 +157,7 @@ export default function BellowsBreathScreen() {
           </View>
 
           <Animated.View
-            style={[
-              styles.pulseCircle,
-              {
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}
+            style={[styles.pulseCircle, { transform: [{ scale: pulseAnim }] }]}
           />
           <Text style={styles.counterText}>
             Rep: {repCount} / {maxReps}
@@ -174,7 +167,6 @@ export default function BellowsBreathScreen() {
           </Text>
         </View>
 
-        {/* Buttons */}
         <View style={styles.buttonContainer}>
           {isRunning ? (
             <TouchableOpacity style={styles.buttonStop} onPress={stopBreathing}>
@@ -190,7 +182,6 @@ export default function BellowsBreathScreen() {
           )}
         </View>
 
-        {/* Music Modal */}
         <BackgroundMusicModal
           isVisible={isMusicModalVisible}
           onClose={() => setIsMusicModalVisible(false)}
@@ -201,14 +192,8 @@ export default function BellowsBreathScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1C2526",
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(28, 37, 38, 0.85)",
-  },
+  container: { flex: 1, backgroundColor: "#1C2526" },
+  overlay: { flex: 1, backgroundColor: "rgba(28, 37, 38, 0.85)" },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -218,11 +203,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#1C2526",
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
+  headerTitle: { fontSize: 18, fontWeight: "bold", color: "white" },
   headerButtons: {
     flexDirection: "row",
     alignItems: "center",
@@ -230,17 +211,9 @@ const styles = StyleSheet.create({
     top: 10,
     right: 20,
   },
-  iconButton: {
-    marginLeft: 16,
-  },
-  iconButtonDisabled: {
-    opacity: 0.5,
-  },
-  centerContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  iconButton: { marginLeft: 16 },
+  iconButtonDisabled: { opacity: 0.5 },
+  centerContent: { flex: 1, justifyContent: "center", alignItems: "center" },
   pulseCircle: {
     width: 140,
     height: 140,
@@ -249,20 +222,9 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginBottom: 24,
   },
-  counterText: {
-    fontSize: 22,
-    color: "white",
-    marginTop: 20,
-    marginBottom: 8,
-  },
-  roundText: {
-    fontSize: 18,
-    color: "#cccccc",
-  },
-  buttonContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
+  counterText: { fontSize: 22, color: "white", marginTop: 20, marginBottom: 8 },
+  roundText: { fontSize: 18, color: "#cccccc" },
+  buttonContainer: { paddingHorizontal: 20, paddingBottom: 40 },
   buttonStart: {
     backgroundColor: "#4CAF50",
     paddingVertical: 14,
@@ -275,9 +237,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
   },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
-  },
+  buttonText: { fontSize: 16, fontWeight: "bold", color: "white" },
 });

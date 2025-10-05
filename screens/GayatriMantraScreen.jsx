@@ -33,6 +33,7 @@ export default function GayatriMantraScreen() {
     mantraLines.map(() => new Animated.Value(0))
   ).current;
   const startTimeRef = useRef(null);
+  const isMeditationRunning = useRef(false);
   const { updateSession } = useLocalData();
 
   const toggleMusicModal = () => {
@@ -41,7 +42,7 @@ export default function GayatriMantraScreen() {
 
   const startChanting = async () => {
     startTimeRef.current = Date.now(); // track session start
-
+    isMeditationRunning.current = true;
     setIsRunning(true);
 
     if (!soundRef.current) {
@@ -74,7 +75,7 @@ export default function GayatriMantraScreen() {
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    if (saveSession) {
+    if (saveSession || isMeditationRunning.current) {
       // Save session
       await updateSession("meditation", "Gaytri Mantra", duration);
     }
@@ -100,6 +101,7 @@ export default function GayatriMantraScreen() {
         soundRef.current = null;
       }
       setIsRunning(false);
+      isMeditationRunning.current = false;
       // Reset fade values
       fadeAnims.forEach((anim) => anim.setValue(0));
     });

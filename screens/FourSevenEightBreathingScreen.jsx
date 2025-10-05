@@ -26,12 +26,11 @@ export default function FourSevenEightBreathingScreen() {
 
   const phases = ["Inhale", "Hold", "Exhale"];
   const durations = [4000, 7000, 8000]; // 4s inhale, 7s hold, 8s exhale
-  const animationDurations = [4000, 3900, 4500]; // 4s inhale, 7s hold, 8s exhale
 
   const [phaseIndex, setPhaseIndex] = useState(0);
-  const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isBreathingRunning = useRef(false);
 
   const animateAndSchedule = (index) => {
     const currentPhase = phases[index];
@@ -53,7 +52,7 @@ export default function FourSevenEightBreathingScreen() {
     Animated.timing(scaleAnim, {
       toValue:
         currentPhase === "Inhale" ? 2.5 : currentPhase === "Hold" ? 2.5 : 1, // Exhale
-      duration: durations[index],
+      duration: currentDuration,
       easing: Easing.linear,
       useNativeDriver: true,
     }).start();
@@ -67,13 +66,12 @@ export default function FourSevenEightBreathingScreen() {
 
   const startBreathing = () => {
     setIsRunning(true);
-    animateAndSchedule(phaseIndex); // kick off the first phase
-
-    // Save session
+    isBreathingRunning.current = true;
+    animateAndSchedule(phaseIndex);
     startTimeRef.current = Date.now(); // track session start
   };
 
-  const stopBreathing = async () => {
+  const stopBreathing = async (saveSession = true) => {
     setIsRunning(false);
     clearTimeout(timeoutRef.current);
     setPhase("Ready");
@@ -84,8 +82,12 @@ export default function FourSevenEightBreathingScreen() {
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    // Save session
-    await updateSession("breathing", "4-7-8 Breathing", duration);
+    // Save session only if running
+    if (saveSession && isBreathingRunning.current) {
+      await updateSession("breathing", "4-7-8 Breathing", duration);
+    }
+
+    isBreathingRunning.current = false;
 
     Animated.timing(scaleAnim, {
       toValue: 1,
@@ -100,7 +102,7 @@ export default function FourSevenEightBreathingScreen() {
   useEffect(() => {
     return () => {
       clearTimeout(timeoutRef.current);
-      Speech.stop();
+      stopBreathing(false);
     };
   }, []);
 

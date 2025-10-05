@@ -29,6 +29,7 @@ export default function BoxBreathingScreen() {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isBreathingRunning = useRef(false);
 
   const [targetPosition, setTargetPosition] = useState({ x: -20, y: -20 });
 
@@ -77,6 +78,7 @@ export default function BoxBreathingScreen() {
 
   const startBreathing = () => {
     setIsRunning(true);
+    isBreathingRunning.current = true;
     animatePhase(phaseIndex);
     startTimeRef.current = Date.now(); // track session start
 
@@ -89,7 +91,7 @@ export default function BoxBreathingScreen() {
     }, duration);
   };
 
-  const stopBreathing = async () => {
+  const stopBreathing = async (saveSession = true) => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
     setPhase("Ready");
@@ -101,8 +103,12 @@ export default function BoxBreathingScreen() {
       : 0;
 
     // Save session
-    await updateSession("breathing", "Box Breathing", duration);
 
+    if (saveSession || isBreathingRunning.current) {
+      await updateSession("breathing", "Box Breathing", duration);
+    }
+
+    isBreathingRunning.current = false;
     Animated.timing(ballPosition, {
       toValue: { x: -20, y: -20 },
       duration: 100,
@@ -117,7 +123,7 @@ export default function BoxBreathingScreen() {
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
-      Speech.stop();
+      stopBreathing(false);
     };
   }, []);
 

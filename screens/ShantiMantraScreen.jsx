@@ -28,6 +28,7 @@ export default function ShantiMantraScreen() {
     mantraLines.map(() => new Animated.Value(0))
   ).current;
   const startTimeRef = useRef(null);
+  const isMeditationRunning = useRef(false);
   const { updateSession } = useLocalData();
 
   const toggleMusicModal = () => {
@@ -36,7 +37,7 @@ export default function ShantiMantraScreen() {
 
   const startChanting = async () => {
     startTimeRef.current = Date.now(); // track session start
-
+    isMeditationRunning.current = true;
     setIsRunning(true);
 
     if (!soundRef.current) {
@@ -69,7 +70,7 @@ export default function ShantiMantraScreen() {
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    if (saveSession) {
+    if (saveSession || isMeditationRunning.current) {
       // Save session
       await updateSession("meditation", "Shanti Mantra", duration);
     }
@@ -95,6 +96,7 @@ export default function ShantiMantraScreen() {
         soundRef.current = null;
       }
       setIsRunning(false);
+      isMeditationRunning.current = false;
       // Reset fade values
       fadeAnims.forEach((anim) => anim.setValue(0));
     });
