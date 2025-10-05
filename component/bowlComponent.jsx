@@ -63,7 +63,6 @@ export default function BowlComponent() {
     const { sound } = await Audio.Sound.createAsync(
       require("../assets/sound/bowl-sound.mp3")
     );
-    console.log("Single Tap");
 
     // 🔁 Reset state when sound finishes
     sound.setOnPlaybackStatusUpdate((status) => {
@@ -79,8 +78,6 @@ export default function BowlComponent() {
   };
 
   const onLongPress = async () => {
-    console.log("✋ Long Press - force stop");
-
     // Stop bowl sound if exists
     if (bowlSound) {
       try {
@@ -115,7 +112,6 @@ export default function BowlComponent() {
   // 🔄 On rotation gesture
   const onRotateGestureEvent = async (event) => {
     if (!hasTappedBowl) {
-      console.log("⚠️ Must tap bowl before rotating");
       return;
     }
 
@@ -124,7 +120,6 @@ export default function BowlComponent() {
     if (Math.abs(rotation) > 0.1) {
       // start sound if not rotating
       if (!isRotating.current) {
-        console.log("Rotating");
         isRotating.current = true;
         Vibration.vibrate([0, 100, 100, 100]);
         const { sound } = await Audio.Sound.createAsync(

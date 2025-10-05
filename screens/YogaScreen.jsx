@@ -35,7 +35,7 @@ const yogaPoses = [
   },
   {
     id: "6",
-    name: "Shavasana (Corpse Pose)",
+  name: "Shavasana (Corpse Pose)",
     description: "Relaxes the body and mind completely.",
     screen: "ShavasanaScreen",
   },

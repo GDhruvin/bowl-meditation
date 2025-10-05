@@ -46,6 +46,7 @@ export default function TrikonasanaScreen() {
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const stepTimerRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isYogaRunning = useRef(false);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -60,6 +61,7 @@ export default function TrikonasanaScreen() {
 
   const startChanting = () => {
     setIsRunning(true);
+    isYogaRunning.current = true;
     setCurrentStep(0);
     speakStep(yogaSteps[0].text);
     startTimeRef.current = Date.now(); // track session start
@@ -88,12 +90,13 @@ export default function TrikonasanaScreen() {
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    if (saveSession) {
+    if (saveSession || isYogaRunning.current) {
       // Save session
       await updateSession("yoga", "Trikonasana", duration);
     }
 
     setIsRunning(false);
+    isYogaRunning.current = false;
     clearInterval(stepTimerRef.current);
     Speech.stop();
   };

@@ -49,7 +49,6 @@ export const useLocalData = () => {
           lastResetMonth: new Date().getMonth(), // track month
         };
         await AsyncStorage.setItem("appLocalData", JSON.stringify(initialData));
-        console.log("Initialized AsyncStorage with default local data ✅");
       } else {
         let parsed = JSON.parse(storedData);
         const currentMonth = new Date().getMonth();

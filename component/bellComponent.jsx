@@ -80,7 +80,6 @@ export default function BellComponent() {
     if (soundRef.current) {
       try {
         await soundRef.current.stopAsync();
-        console.log("Sound stopped");
       } catch (error) {
         console.error("Failed to stop sound", error);
       }

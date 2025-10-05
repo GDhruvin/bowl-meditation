@@ -54,6 +54,7 @@ export default function BhujangasanaScreen() {
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
   const stepTimerRef = useRef(null);
   const startTimeRef = useRef(null);
+  const isYogaRunning = useRef(false);
 
   const toggleMusicModal = () => {
     setIsMusicModalVisible(!isMusicModalVisible);
@@ -68,6 +69,7 @@ export default function BhujangasanaScreen() {
 
   const startChanting = () => {
     setIsRunning(true);
+    isYogaRunning.current = true;
     setCurrentStep(0);
     speakStep(yogaSteps[0].text);
     startTimeRef.current = Date.now(); // track session start
@@ -97,12 +99,13 @@ export default function BhujangasanaScreen() {
       : 0;
 
     // Save session
-    if (saveSession) {
+    if (saveSession || isYogaRunning.current) {
       // Save session only if explicitly allowed
       await updateSession("yoga", "Bhujangasana", duration);
     }
 
     setIsRunning(false);
+    isYogaRunning.current = false;
     clearInterval(stepTimerRef.current);
     Speech.stop();
   };
