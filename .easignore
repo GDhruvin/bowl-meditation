@@ -1,0 +1,35 @@
+# Ignore dependencies (EAS will install them fresh)
+node_modules
+
+# Version control
+.git
+.gitignore
+
+# Editor / IDE
+.vscode
+.idea
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Local cache
+.expo
+.expo-shared
+
+# Build outputs
+dist
+build
+web-build
+
+# Other big files you don’t need
+*.zip
+*.rar
+*.psd
+*.mov
+*.avi

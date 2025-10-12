@@ -1,33 +1,40 @@
 {
   "expo": {
-    "name": "bowlMeditation",
-    "slug": "bowlMeditation",
+    "name": "Mind Aura",
+    "slug": "mind-aura",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/image/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/image/splash-icon.png",
+      "image": "./assets/image/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/image/adaptive-icon.png",
+        "foregroundImage": "./assets/image/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "package": "com.mindaura.app"
     },
     "web": {
       "favicon": "./assets/image/favicon.png"
     },
-    "plugins": [
-      "expo-audio",
-      "expo-video"
-    ]
+    "extra": {
+      "eas": {
+        "projectId": "8451b45c-daaa-4563-9e77-805a9d4a394f"
+      }
+    }
   }
 }
