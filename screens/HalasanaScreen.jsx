@@ -16,23 +16,33 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/halasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250594/bbuh2nqutozhmvypjl6d.png",
+    },
     text: "Lie flat on your back with legs extended and arms relaxed at your sides. Keep your spine neutral and face upward.",
   },
   {
-    image: require("../assets/halasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250592/ahnshvd5duahtkoml2xt.png",
+    },
     text: "Inhale and slowly lift both legs upward to a 90° angle. Keep your arms flat on the mat, palms pressing gently downward for support.",
   },
   {
-    image: require("../assets/halasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250592/wtgi6s82udwo2ck5erlu.png",
+    },
     text: "Exhale and carefully move your legs overhead into Plow Pose. Extend your legs fully with toes touching (or close to) the floor behind your head. Keep your spine long and chin slightly tucked.",
   },
   {
-    image: require("../assets/halasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250592/ahnshvd5duahtkoml2xt.png",
+    },
     text: "To release, gently bring your legs back to a 90° position while supporting your core and keeping your movements slow and controlled.",
   },
   {
-    image: require("../assets/halasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250594/bbuh2nqutozhmvypjl6d.png",
+    },
     text: "Slowly lower your legs back down to the mat and return to the starting resting position, lying flat on your back with arms at your sides.",
   },
 ];

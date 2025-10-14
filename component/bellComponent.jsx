@@ -209,11 +209,12 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#4CAF50",
     marginBottom: 12,
-    color: "#222",
   },
   modalText: {
     fontSize: 16,
-    color: "#444",
+    color: "#FFFFFF",
+    marginBottom: 10,
   },
 });

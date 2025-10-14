@@ -37,7 +37,9 @@ export default function CandleGazingScreen() {
       {/* Video Component */}
       <Video
         ref={videoRef}
-        source={require("../assets/video/candle.mp4")}
+        source={{
+          uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760251288/kx8ps5haj3pasjlteexs.mp4",
+        }}
         style={styles.backgroundVideo}
         resizeMode="cover"
         isLooping

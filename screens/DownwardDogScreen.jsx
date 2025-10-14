@@ -16,31 +16,45 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/downwarddog/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250585/gtxjj13jjifvfe4ykob8.png",
+    },
     text: "Start in Tabletop: hands under shoulders, knees under hips, back flat, gaze downward.",
   },
   {
-    image: require("../assets/downwarddog/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250584/xjglvf5ylfwy4qvpwudj.png",
+    },
     text: "Tuck your toes under and gently lift your knees a few inches off the mat, keeping arms straight and back flat.",
   },
   {
-    image: require("../assets/downwarddog/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250587/q8hqindtfnv3aulkh9mt.png",
+    },
     text: "Lift your hips higher, straighten arms, keep knees slightly bent and heels lifted. Relax your head between your arms.",
   },
   {
-    image: require("../assets/downwarddog/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250585/twqzahjrk4vqs0apca79.png",
+    },
     text: "Extend fully into Downward Dog: hips lifted in an inverted V, arms and legs straight, heels pressing toward the mat, head relaxed.",
   },
   {
-    image: require("../assets/downwarddog/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250587/q8hqindtfnv3aulkh9mt.png",
+    },
     text: "Bend your knees slightly and lower your heels, keeping hips high and arms straight.",
   },
   {
-    image: require("../assets/downwarddog/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250584/xjglvf5ylfwy4qvpwudj.png",
+    },
     text: "Lower your knees closer to the mat, toes still tucked, back flat, arms straight.",
   },
   {
-    image: require("../assets/downwarddog/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250585/gtxjj13jjifvfe4ykob8.png",
+    },
     text: "Return to Tabletop: hands under shoulders, knees under hips, back neutral, gaze downward.",
   },
 ];

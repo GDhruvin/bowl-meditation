@@ -16,27 +16,39 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/utkatasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251259/indkuq8udv4y6h0rcapc.png",
+    },
     text: "Stand upright in Tadasana (Mountain Pose). Feet together, arms relaxed at your sides, spine tall, and gaze forward.",
   },
   {
-    image: require("../assets/utkatasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251258/la2seljfbxnc4no6czas.png",
+    },
     text: "Inhale and raise both arms straight overhead, palms facing inward. Keep your chest open and spine long.",
   },
   {
-    image: require("../assets/utkatasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251262/umdtzllrzmot8z7w78xf.png",
+    },
     text: "Exhale and begin bending your knees. Shift your hips slightly back as if preparing to sit on an invisible chair. Keep arms extended overhead.",
   },
   {
-    image: require("../assets/utkatasana/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251263/zmbpjhnaajc2xpwln8zx.png",
+    },
     text: "Lower into the full Chair Pose. Knees deeply bent, thighs angled back, weight in the heels, arms fully extended overhead, chest lifted, and spine long.",
   },
   {
-    image: require("../assets/utkatasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251258/la2seljfbxnc4no6czas.png",
+    },
     text: "Inhale and straighten your legs, slowly returning upright with arms overhead.",
   },
   {
-    image: require("../assets/utkatasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251259/indkuq8udv4y6h0rcapc.png",
+    },
     text: "Exhale and relax your arms back down to your sides, returning to Mountain Pose.",
   },
 ];

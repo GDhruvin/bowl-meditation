@@ -16,23 +16,33 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/trikonasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251248/szau9ljeffsler5t8oph.png",
+    },
     text: "Stand upright with feet spread wide apart in a stable stance. Arms relaxed at your sides, gaze forward.",
   },
   {
-    image: require("../assets/trikonasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251251/iknfxmdnf8qubepj4uuc.png",
+    },
     text: "Extend both arms out to the sides at shoulder height, palms facing down. Keep your torso upright and legs straight.",
   },
   {
-    image: require("../assets/trikonasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251249/vtt2irjbgh4t10czgxmz.png",
+    },
     text: "Bend your torso sideways over the right leg. Place your right hand on your shin, ankle, or the floor, while your left arm reaches straight up. Keep legs straight and chest open.",
   },
   {
-    image: require("../assets/trikonasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251251/iknfxmdnf8qubepj4uuc.png",
+    },
     text: "Slowly return your torso upright with arms extended at shoulder height.",
   },
   {
-    image: require("../assets/trikonasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251248/szau9ljeffsler5t8oph.png",
+    },
     text: "Relax your arms back to the sides and return to the starting wide stance.",
   },
 ];

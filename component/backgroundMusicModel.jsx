@@ -13,25 +13,57 @@ import { Audio } from "expo-av";
 
 export const BackgroundMusicModal = ({ isVisible, onClose }) => {
   const images = {
-    "ocen_sound_img.jpg": require("../assets/bg_sound/ocen_sound_img.jpg"),
-    "healing_sound_img.jpg": require("../assets/bg_sound/healing_sound_img.jpg"),
-    "forest_sound_img.jpg": require("../assets/bg_sound/forest_sound_img.jpg"),
-    "om_sound-img.jpg": require("../assets/bg_sound/om_sound-img.jpg"),
-    "meditation_sound_img.jpg": require("../assets/bg_sound/meditation_sound_img.jpg"),
-    "meditation2_sound_img.jpg": require("../assets/bg_sound/meditation2_sound_img.jpg"),
-    "soul_soud_img.jpg": require("../assets/bg_sound/soul_soud_img.jpg"),
-    "bird_sound_img.jpg": require("../assets/bg_sound/bird_sound_img.jpg"),
+    "ocen_sound_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209756/toglbpovtwzamzl8dhac.jpg",
+    },
+    "healing_sound_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209743/foyyt1f971stjrwjwxhy.jpg",
+    },
+    "forest_sound_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209749/s32g5p056scpwoio0uwm.jpg",
+    },
+    "om_sound-img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209747/ay3rydhwuy3yrfakbxjd.jpg",
+    },
+    "meditation_sound_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209743/q63syhs3gkki1ykcqyy8.jpg",
+    },
+    "meditation2_sound_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209743/jsifbyo5hmhgtu3a3ib4.jpg",
+    },
+    "soul_soud_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209747/nkm2m4epabcvkbu63e6l.jpg",
+    },
+    "bird_sound_img.jpg": {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760209745/figyr9oz9uy5hkxyqmdz.jpg",
+    },
   };
 
   const sounds = {
-    "beach-sounds-10min.mp3": require("../assets/bg_sound/beach-sounds-10min.mp3"),
-    "forest-sounds-10min.mp3": require("../assets/bg_sound/forest-sounds-10min.mp3"),
-    "healing-meditation-15min.mp3": require("../assets/bg_sound/healing-meditation-15min.mp3"),
-    "om-meditation-15min.mp3": require("../assets/bg_sound/om-meditation-15min.mp3"),
-    "meditation-1.mp3": require("../assets/bg_sound/meditation-1.mp3"),
-    "meditation-2.mp3": require("../assets/bg_sound/meditation-2.mp3"),
-    "spiritual-music.mp3": require("../assets/bg_sound/spiritual-music.mp3"),
-    "forest-birds-10min.mp3": require("../assets/bg_sound/forest-birds-10min.mp3"),
+    "beach-sounds-10min.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291206/avjc2pjfv0xafygysnj2.mp3",
+    },
+    "forest-sounds-10min.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291318/whnsmyuzdfq4zbuths40.mp3",
+    },
+    "healing-meditation-15min.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291381/mxvvohgdnwbqe40qod2g.mp3",
+    },
+    "om-meditation-15min.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291561/uw5ywpbhsgxa7rnmilli.mp3",
+    },
+    "meditation-1.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291437/rmysque8kzyz38wcsuvm.mp3",
+    },
+    "meditation-2.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291493/kskzwog6heowxjwpcchw.mp3",
+    },
+    "spiritual-music.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291645/kquc6ti6e7ib2celvomb.mp3",
+    },
+    "forest-birds-10min.mp3": {
+      uri: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760291263/zedmoowrnlc2xco16lxk.mp3",
+    },
   };
 
   const musicList = [
@@ -85,9 +117,7 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
     },
   ];
 
-  const [currentSound, setCurrentSound] = useState(null);
   const [playingId, setPlayingId] = useState(null);
-
   const soundRef = useRef(null);
 
   const playSound = async (file, id) => {
@@ -103,7 +133,6 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
         shouldPlay: true,
         isLooping: true,
       });
-
       soundRef.current = sound;
       setPlayingId(id);
     } catch (error) {
@@ -132,9 +161,7 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
       shouldDuckAndroid: true,
     });
 
-    return () => {
-      stopSound();
-    };
+    return () => stopSound();
   }, []);
 
   return (
@@ -215,19 +242,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4CAF50",
-  },
-  modalBody: {
-    flex: 1,
-  },
-  noMusicText: {
-    fontSize: 16,
-    color: "white",
-    textAlign: "center",
-  },
+  modalTitle: { fontSize: 18, fontWeight: "bold", color: "#4CAF50" },
+  modalBody: { flex: 1 },
+  noMusicText: { fontSize: 16, color: "white", textAlign: "center" },
   musicItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -237,21 +254,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
   },
-  musicImage: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  musicTitle: {
-    flex: 1,
-    fontSize: 16,
-    color: "white",
-  },
-  playButton: {
-    marginRight: 10,
-  },
-  stopAllButton: {
-    marginRight: 8,
-  },
+  musicImage: { width: 48, height: 48, borderRadius: 8, marginRight: 12 },
+  musicTitle: { flex: 1, fontSize: 16, color: "white" },
+  playButton: { marginRight: 10 },
 });

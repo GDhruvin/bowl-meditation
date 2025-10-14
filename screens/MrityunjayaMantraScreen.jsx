@@ -49,7 +49,9 @@ export default function MrityunjayaMantraScreen() {
 
     if (!soundRef.current) {
       const { sound } = await Audio.Sound.createAsync(
-        require("../assets/sound/maha_mrityunjaya.mp3"),
+        {
+          url: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760289035/ljfi95p7ydoi2xd7dtvb.mp3",
+        },
         {
           shouldPlay: true,
           isLooping: true,

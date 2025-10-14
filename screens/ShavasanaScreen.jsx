@@ -16,31 +16,45 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/shavasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250616/ppujozf30qe2zohzu9nw.png",
+    },
     text: "Sit with legs extended forward, preparing to recline. Place your hands behind you for support.",
   },
   {
-    image: require("../assets/shavasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250619/debbs0wjw4bm5ec4f2a5.png",
+    },
     text: "Slowly recline onto your back. Bend your knees, keep feet flat on the mat, and arms resting beside the body.",
   },
   {
-    image: require("../assets/shavasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250615/x8owsxhhkuloipqeurev.png",
+    },
     text: "Extend your legs forward, fully resting on the mat. Arms slightly away from the body, palms facing upward.",
   },
   {
-    image: require("../assets/shavasana/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250621/uztpewagvoyk12fbpcns.png",
+    },
     text: "Relax completely in Shavasana. Legs comfortably apart, arms at sides, palms facing upward, eyes closed. Breathe calmly.",
   },
   {
-    image: require("../assets/shavasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250615/x8owsxhhkuloipqeurev.png",
+    },
     text: "Gently bring awareness back. Wiggle your fingers and toes, then bend your knees slowly.",
   },
   {
-    image: require("../assets/shavasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250619/debbs0wjw4bm5ec4f2a5.png",
+    },
     text: "Roll slightly to one side, keeping knees bent, preparing to sit up with ease.",
   },
   {
-    image: require("../assets/shavasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250616/ppujozf30qe2zohzu9nw.png",
+    },
     text: "Use your hands for support and return to a seated position, legs extended forward, spine tall.",
   },
 ];

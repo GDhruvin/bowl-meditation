@@ -16,23 +16,33 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/dhanurasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250577/vlywm2iipkr8w57gaytt.png",
+    },
     text: "Lie flat on your stomach with legs extended and arms relaxed at your sides. Keep your face turned downward and body relaxed.",
   },
   {
-    image: require("../assets/dhanurasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250578/jnejetisakkd7scmqsps.png",
+    },
     text: "Bend both knees and bring your heels toward your hips. Reach your arms back and prepare to hold your ankles.",
   },
   {
-    image: require("../assets/dhanurasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250579/dgrqbkdiymon47tfog0c.png",
+    },
     text: "Inhale and grasp your ankles. Lift your chest and thighs off the ground, arching your back gracefully into Bow Pose. Keep your gaze forward and breathe deeply.",
   },
   {
-    image: require("../assets/dhanurasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250578/jnejetisakkd7scmqsps.png",
+    },
     text: "Exhale and gently release your ankles. Lower your chest and thighs back toward the mat, keeping knees bent.",
   },
   {
-    image: require("../assets/dhanurasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250577/vlywm2iipkr8w57gaytt.png",
+    },
     text: "Return to the starting position, lying flat on your stomach with arms at your sides, and relax completely.",
   },
 ];

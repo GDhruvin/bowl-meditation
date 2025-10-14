@@ -16,31 +16,45 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/bhujangasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/odxzunwyptwpycpiph2m.png",
+    },
     text: "Lie face down on the mat with legs extended back, arms relaxed at sides, and forehead resting on the mat.",
   },
   {
-    image: require("../assets/bhujangasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/wqkofwnzb6lospzy9wnm.png",
+    },
     text: "Place your palms flat under your shoulders, elbows close to the body. Keep legs extended straight back.",
   },
   {
-    image: require("../assets/bhujangasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/t13aqpvwjrghdgxy1yqq.png",
+    },
     text: "Gently lift your chest using back muscles. Keep elbows bent, shoulders rolled back, and gaze slightly forward.",
   },
   {
-    image: require("../assets/bhujangasana/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/rmzzihrwcvkuhaaro6r5.png",
+    },
     text: "Press palms into the mat, straighten arms, lift your chest high, roll shoulders back, and look upward.",
   },
   {
-    image: require("../assets/bhujangasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/t13aqpvwjrghdgxy1yqq.png",
+    },
     text: "Slowly lower your chest halfway down, keeping elbows bent close to the body.",
   },
   {
-    image: require("../assets/bhujangasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/wqkofwnzb6lospzy9wnm.png",
+    },
     text: "Bring your chest closer to the mat, palms still under shoulders, elbows bent.",
   },
   {
-    image: require("../assets/bhujangasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250534/odxzunwyptwpycpiph2m.png",
+    },
     text: "Return to starting position lying flat on the mat, arms relaxed at sides, forehead on the mat.",
   },
 ];

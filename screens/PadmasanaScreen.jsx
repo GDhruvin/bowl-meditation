@@ -16,23 +16,33 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/padmasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250599/pjiwdecqkuzgrlnon2ph.png",
+    },
     text: "Sit on the mat with legs extended forward, back straight, hands resting on thighs.",
   },
   {
-    image: require("../assets/padmasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250600/twsztfb9d7dxruzeaxcc.png",
+    },
     text: "Bend your right leg and place your right foot on top of your left thigh, keeping the left leg extended forward.",
   },
   {
-    image: require("../assets/padmasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250602/t9n6vvikmwycjw2mwg9i.png",
+    },
     text: "Bend your left leg and place the left foot on top of your right thigh. Sit upright in full Lotus Pose with hands on knees.",
   },
   {
-    image: require("../assets/padmasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250600/twsztfb9d7dxruzeaxcc.png",
+    },
     text: "Release your left leg, placing it back on the mat, while keeping the right foot on your left thigh.",
   },
   {
-    image: require("../assets/padmasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250599/pjiwdecqkuzgrlnon2ph.png",
+    },
     text: "Extend both legs forward and return to the seated starting position with back straight.",
   },
 ];

@@ -16,31 +16,45 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/vrikshasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251298/e0i3ehtiw74b1mdhjcal.png",
+    },
     text: "Stand upright in Mountain Pose. Feet together, arms relaxed at sides.",
   },
   {
-    image: require("../assets/vrikshasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251308/ijal8ijzzizmtkidpui9.png",
+    },
     text: "Balance on your left leg and place your right foot against the inner left calf, below the knee. Keep arms relaxed at sides.",
   },
   {
-    image: require("../assets/vrikshasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251303/bl5yddenpn2ltmvu5hwx.png",
+    },
     text: "Lift your arms overhead in a wide V-shape while pressing your right foot against the inner left thigh.",
   },
   {
-    image: require("../assets/vrikshasana/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251309/tonszg61gywzqgmekdpn.png",
+    },
     text: "Bring your palms together overhead in Namaste, holding the full Tree Pose with balance and steady breathing.",
   },
   {
-    image: require("../assets/vrikshasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251303/bl5yddenpn2ltmvu5hwx.png",
+    },
     text: "Slowly lower your palms apart into a wide V-shape while maintaining your balance.",
   },
   {
-    image: require("../assets/vrikshasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251308/ijal8ijzzizmtkidpui9.png",
+    },
     text: "Gently lower your arms and bring your right foot down from the thigh to the floor.",
   },
   {
-    image: require("../assets/vrikshasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251298/e0i3ehtiw74b1mdhjcal.png",
+    },
     text: "Return to Mountain Pose with feet together and arms relaxed at your sides.",
   },
 ];

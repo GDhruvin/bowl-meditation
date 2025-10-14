@@ -16,51 +16,75 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/surya/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251234/gju0xtdccgkomhmftujd.png",
+    },
     text: "Stand tall at the front of the mat, feet together, palms pressed together in Namaste at the heart center.",
   },
   {
-    image: require("../assets/surya/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251242/iajo7qmmursluton83lf.png",
+    },
     text: "Inhale, raise arms overhead, arch back slightly, stretching upward.",
   },
   {
-    image: require("../assets/surya/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251237/wp09opmddzt9xswy0dtf.png",
+    },
     text: "Exhale, bend forward from the hips, bring palms beside the feet, forehead toward knees.",
   },
   {
-    image: require("../assets/surya/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251238/p5dvkcy0pnwitqvy9rs1.png",
+    },
     text: "Inhale, step the right leg back, keep the left foot forward between palms, look upward.",
   },
   {
-    image: require("../assets/surya/5.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251235/bdemnyk95wwfq5aq3pcz.png",
+    },
     text: "Exhale, step the left leg back, body in a straight line, arms strong, gaze down.",
   },
   {
-    image: require("../assets/surya/6.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251240/kl2ctcjvonn5j813vugf.png",
+    },
     text: "Lower knees, chest, and chin to the floor while keeping hips raised. Eight points touch the mat (toes, knees, chest, chin, hands).",
   },
   {
-    image: require("../assets/surya/7.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251243/xtrcylxed8almhqsbaoz.png",
+    },
     text: "Inhale, slide forward, lift the chest up, shoulders rolled back, elbows bent close to the body.",
   },
   {
-    image: require("../assets/surya/8.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251245/q6v8vmnqlehzflhcuvlk.png",
+    },
     text: "Exhale, lift hips up into an inverted V-shape, heels press toward the mat, head relaxed.",
   },
   {
-    image: require("../assets/surya/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251238/p5dvkcy0pnwitqvy9rs1.png",
+    },
     text: "Inhale, bring the right foot forward between the hands, left leg extended back, gaze upward.",
   },
   {
-    image: require("../assets/surya/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251237/wp09opmddzt9xswy0dtf.png",
+    },
     text: "Exhale, bring the left foot forward beside the right, fold forward, palms beside the feet.",
   },
   {
-    image: require("../assets/surya/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251242/iajo7qmmursluton83lf.png",
+    },
     text: "Inhale, rise up, sweep arms overhead, arch back slightly, stretch upward.",
   },
   {
-    image: require("../assets/surya/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760251234/gju0xtdccgkomhmftujd.png",
+    },
     text: "Exhale, return to standing, palms together at the heart center in Namaste.",
   },
 ];

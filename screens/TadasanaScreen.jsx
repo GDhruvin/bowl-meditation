@@ -16,23 +16,33 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/tadasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760284100/bpatotiao2kuht5yclxn.png",
+    },
     text: "Stand straight with feet together, hands at your side.",
   },
   {
-    image: require("../assets/tadasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760284099/sj3fa6v5r2bwfqmdxiu5.png",
+    },
     text: "Raise your arms overhead, palms facing each other.",
   },
   {
-    image: require("../assets/tadasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760284100/czw28hvlwbbccbggus7u.png",
+    },
     text: "Stretch your whole body upward while keeping balance.",
   },
   {
-    image: require("../assets/tadasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760284099/sj3fa6v5r2bwfqmdxiu5.png",
+    },
     text: "Lower your arms slowly back toward your sides.",
   },
   {
-    image: require("../assets/tadasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760284100/bpatotiao2kuht5yclxn.png",
+    },
     text: "Return to the starting position, standing tall and relaxed.",
   },
 ];

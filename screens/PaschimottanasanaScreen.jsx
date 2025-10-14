@@ -16,31 +16,45 @@ import { useLocalData } from "../hooks/useLocalData";
 
 const yogaSteps = [
   {
-    image: require("../assets/paschimottanasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250606/vbeezv19sxrcmultkqer.png",
+    },
     text: "Sit upright with legs extended straight forward together. Keep your spine tall and arms resting at your sides.",
   },
   {
-    image: require("../assets/paschimottanasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250607/bkao6kbr4diupcd50fnm.png",
+    },
     text: "Inhale and raise both arms straight overhead, elongating the spine and preparing for the forward fold.",
   },
   {
-    image: require("../assets/paschimottanasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250609/aqjfuylx9ctgf8aeimsc.png",
+    },
     text: "Exhale and begin leaning forward from the hips. Reach your arms toward your feet while keeping the back lengthened.",
   },
   {
-    image: require("../assets/paschimottanasana/4.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250610/tmea4i1wycknykt47ler.png",
+    },
     text: "Fold fully into Paschimottanasana. Hold your feet or shins, relax the head toward the knees, and keep the spine extended.",
   },
   {
-    image: require("../assets/paschimottanasana/3.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250609/aqjfuylx9ctgf8aeimsc.png",
+    },
     text: "To release, slowly lift your torso halfway up, keeping your back long and controlled.",
   },
   {
-    image: require("../assets/paschimottanasana/2.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250607/bkao6kbr4diupcd50fnm.png",
+    },
     text: "Lower your arms back to the sides while returning to an upright seated position.",
   },
   {
-    image: require("../assets/paschimottanasana/1.png"),
+    image: {
+      uri: "https://res.cloudinary.com/djwmj9czu/image/upload/v1760250606/vbeezv19sxrcmultkqer.png",
+    },
     text: "Return to the starting seated position, sitting tall with legs extended and arms resting at your sides.",
   },
 ];
