@@ -133,7 +133,7 @@ export default function SuryaNamaskarScreen() {
           return 0;
         }
       });
-    }, 12000);
+    }, 13000);
   };
 
   const stopChanting = async (saveSession = true) => {

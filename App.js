@@ -35,6 +35,8 @@ import SuryaNamaskarScreen from "./screens/SuryaNamaskarScreen";
 import UtkatasanaScreen from "./screens/UtkatasanaScreen";
 import DhanurasanaScreen from "./screens/DhanurasanaScreen";
 import { useLocalData } from "./hooks/useLocalData";
+import PaschimottanasanaScreen from "./screens/PaschimottanasanaScreen";
+import HalasanaScreen from "./screens/HalasanaScreen";
 
 const Stack = createNativeStackNavigator();
 const { height } = Dimensions.get("window");
@@ -141,6 +143,11 @@ export default function App() {
             name="DhanurasanaScreen"
             component={DhanurasanaScreen}
           />
+          <Stack.Screen
+            name="PaschimottanasanaScreen"
+            component={PaschimottanasanaScreen}
+          />
+          <Stack.Screen name="HalasanaScreen" component={HalasanaScreen} />
         </Stack.Navigator>
       </NavigationContainer>
 

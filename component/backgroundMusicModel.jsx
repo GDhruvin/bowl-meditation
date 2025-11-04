@@ -118,10 +118,15 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
   ];
 
   const [playingId, setPlayingId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const soundRef = useRef(null);
 
   const playSound = async (file, id) => {
+    if (isLoading) return; // prevent multiple quick taps
+    setIsLoading(true);
+
     try {
+      // Stop previous sound first
       if (soundRef.current) {
         await soundRef.current.stopAsync();
         await soundRef.current.unloadAsync();
@@ -129,6 +134,7 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
         setPlayingId(null);
       }
 
+      // Now safely start new one
       const { sound } = await Audio.Sound.createAsync(sounds[file], {
         shouldPlay: true,
         isLooping: true,
@@ -137,6 +143,8 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
       setPlayingId(id);
     } catch (error) {
       console.error("Error playing sound:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -175,11 +183,9 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Background Music</Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity onPress={onClose} style={{ marginLeft: 12 }}>
-                <Ionicons name="close" size={24} color="white" />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={onClose} style={{ marginLeft: 12 }}>
+              <Ionicons name="close" size={24} color="white" />
+            </TouchableOpacity>
           </View>
 
           <FlatList
@@ -188,26 +194,20 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.musicItem}
-                onPress={() => playSound(item.file, item.id)}
+                disabled={isLoading}
+                onPress={() =>
+                  playingId === item.id
+                    ? stopSound()
+                    : playSound(item.file, item.id)
+                }
               >
                 <Image source={images[item.image]} style={styles.musicImage} />
                 <Text style={styles.musicTitle}>{item.title}</Text>
-                <TouchableOpacity
-                  style={styles.playButton}
-                  onPress={() =>
-                    playingId === item.id
-                      ? stopSound()
-                      : playSound(item.file, item.id)
-                  }
-                >
-                  <Ionicons
-                    name={
-                      playingId === item.id ? "pause-circle" : "play-circle"
-                    }
-                    size={28}
-                    color="#4CAF50"
-                  />
-                </TouchableOpacity>
+                <Ionicons
+                  name={playingId === item.id ? "pause-circle" : "play-circle"}
+                  size={28}
+                  color={isLoading ? "gray" : "#4CAF50"}
+                />
               </TouchableOpacity>
             )}
             ListEmptyComponent={
@@ -242,7 +242,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  modalTitle: { fontSize: 18, fontWeight: "bold", color: "#4CAF50" },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4CAF50",
+  },
   modalBody: { flex: 1 },
   noMusicText: { fontSize: 16, color: "white", textAlign: "center" },
   musicItem: {
@@ -251,10 +255,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#444",
-    width: "100%",
     justifyContent: "space-between",
   },
   musicImage: { width: 48, height: 48, borderRadius: 8, marginRight: 12 },
   musicTitle: { flex: 1, fontSize: 16, color: "white" },
-  playButton: { marginRight: 10 },
 });

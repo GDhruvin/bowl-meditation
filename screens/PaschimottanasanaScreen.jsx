@@ -103,7 +103,7 @@ export default function PaschimottanasanaScreen() {
           return 0;
         }
       });
-    }, 10000);
+    }, 13000);
   };
 
   const stopChanting = async (saveSession = true) => {
@@ -150,9 +150,7 @@ export default function PaschimottanasanaScreen() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            Paschimottanasana (seated forward bend)
-          </Text>
+          <Text style={styles.headerTitle}>Paschimottanasana</Text>
           <View style={{ width: 24 }} />
         </View>
 

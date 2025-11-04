@@ -145,12 +145,12 @@ export default function BellComponent() {
       />
 
       <InfoModel visible={showInfo} onClose={() => setShowInfo(false)}>
-        <Text style={styles.modalTitle}>About Tibetan Bowl</Text>
+        <Text style={styles.modalTitle}>About Tibetan Bell</Text>
 
         <Text style={styles.modalText}>
-          Tibetan singing bowls have been used for centuries in Himalayan
-          regions as powerful tools for healing, meditation, and spiritual
-          practices.
+          Tibetan singing bowls (or bells) have been used for centuries in
+          Himalayan regions as powerful tools for healing, meditation, and
+          spiritual practices.
         </Text>
 
         <Text style={styles.modalTitle}>✨ Key Benefits</Text>
@@ -172,14 +172,14 @@ export default function BellComponent() {
 
         <Text style={styles.modalTitle}>🎧 App Usage Tips</Text>
         <Text style={styles.modalText}>
-          {"\u2022"} Tap the bowl for a bell sound{"\n"}
+          {"\u2022"} Tap the bell for a chime sound{"\n"}
           {"\u2022"} Rotate with two fingers to play the humming loop{"\n"}
           {"\u2022"} Long press to stop all sounds instantly
         </Text>
 
         <Text style={styles.modalTitle}>📿 Spiritual Insight</Text>
         <Text style={styles.modalText}>
-          The sound waves emitted by Tibetan bowls resonate with the body's
+          The sound waves emitted by Tibetan bells resonate with the body's
           energy fields to clear blockages and bring balance between body, mind,
           and spirit.
         </Text>

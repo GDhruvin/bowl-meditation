@@ -42,16 +42,23 @@ export default function MrityunjayaMantraScreen() {
   };
 
   const startChanting = async () => {
-    startTimeRef.current = Date.now(); // track session start
-    isMeditationRunning.current = true;
+    if (soundRef.current) {
+      try {
+        await soundRef.current.stopAsync();
+        await soundRef.current.unloadAsync();
+      } catch (e) {
+        console.log("Previous sound cleanup error:", e);
+      }
+      soundRef.current = null;
+    }
 
+    startTimeRef.current = Date.now();
+    isMeditationRunning.current = true;
     setIsRunning(true);
 
-    if (!soundRef.current) {
+    try {
       const { sound } = await Audio.Sound.createAsync(
-        {
-          url: "https://res.cloudinary.com/djwmj9czu/video/upload/v1760289035/ljfi95p7ydoi2xd7dtvb.mp3",
-        },
+        require("../assets/sound/maha_mrityunjaya.mp3"),
         {
           shouldPlay: true,
           isLooping: true,
@@ -59,9 +66,10 @@ export default function MrityunjayaMantraScreen() {
       );
       soundRef.current = sound;
 
-      // Start staggered fade-in animations for each line
+      // Start staggered fade-in animations
+      fadeAnims.forEach((anim) => anim.setValue(0)); // reset animations
       Animated.stagger(
-        1000, // Delay between each line's animation start (adjust as needed)
+        1000,
         fadeAnims.map((anim) =>
           Animated.timing(anim, {
             toValue: 1,
@@ -70,21 +78,20 @@ export default function MrityunjayaMantraScreen() {
           })
         )
       ).start();
+    } catch (error) {
+      console.error("Error starting chanting:", error);
     }
   };
 
   const stopChanting = async (saveSession = true) => {
-    // Calculate session duration
     const duration = startTimeRef.current
       ? Math.floor((Date.now() - startTimeRef.current) / 1000)
       : 0;
 
-    if (saveSession || isMeditationRunning.current) {
-      // Save session
+    if (saveSession && isMeditationRunning.current) {
       await updateSession("meditation", "Maha Mrityunjaya Mantra", duration);
     }
 
-    // Fade out all lines in parallel
     Animated.parallel(
       fadeAnims.map((anim) =>
         Animated.timing(anim, {
@@ -93,12 +100,11 @@ export default function MrityunjayaMantraScreen() {
           useNativeDriver: true,
         })
       )
-    ).start(() => {
-      // After animations complete, clean up
+    ).start(async () => {
       if (soundRef.current) {
         try {
-          soundRef.current.stopAsync();
-          soundRef.current.unloadAsync();
+          await soundRef.current.stopAsync();
+          await soundRef.current.unloadAsync();
         } catch (error) {
           console.error("Error stopping sound:", error);
         }
@@ -106,8 +112,6 @@ export default function MrityunjayaMantraScreen() {
       }
       setIsRunning(false);
       isMeditationRunning.current = false;
-      // Reset fade values
-      fadeAnims.forEach((anim) => anim.setValue(0));
     });
   };
 
@@ -231,6 +235,7 @@ const styles = StyleSheet.create({
   },
   mantraContainer: {
     alignItems: "center",
+    marginHorizontal: 20,
   },
   mantraText: {
     color: "white",

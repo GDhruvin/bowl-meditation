@@ -103,7 +103,7 @@ export default function ShavasanaScreen() {
           return 0;
         }
       });
-    }, 10000);
+    }, 13000);
   };
 
   const stopChanting = async (saveSession = true) => {

@@ -91,7 +91,7 @@ export default function TadasanaScreen() {
           return 0;
         }
       });
-    }, 8000);
+    }, 13000);
   };
 
   const stopChanting = async (saveSession = true) => {
