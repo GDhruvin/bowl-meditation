@@ -37,7 +37,7 @@ export default function SuspenseComponent() {
         style={[styles.logo, { opacity: fadeAnim }]}
       />
       <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>
-        MindAura
+        Mind Ripple
       </Animated.Text>
       <Animated.Text style={[styles.subtitle, { opacity: pulseAnim }]}>
         Loading...

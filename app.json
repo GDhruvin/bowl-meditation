@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Mind Aura",
-    "slug": "mind-aura",
+    "name": "Mind Ripple",
+    "slug": "mind-ripple",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/image/icon.png",
@@ -26,7 +26,7 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
-      "package": "com.mindaura.app"
+      "package": "com.mindpipple.app"
     },
     "web": {
       "favicon": "./assets/image/favicon.png"

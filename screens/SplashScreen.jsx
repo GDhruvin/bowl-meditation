@@ -21,7 +21,7 @@ export default function OnboardingScreens({ navigation }) {
   const screens = [
     {
       image: require("../assets/image/onboarding1.png"),
-      title: "Welcome to MindAura",
+      title: "Welcome to Mind Ripple",
       subtitle: "Begin your journey to inner peace",
       description:
         "Discover guided meditations designed to calm your mind and nurture your soul",
