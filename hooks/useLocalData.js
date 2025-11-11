@@ -10,7 +10,7 @@ const INSTRUMENT_KEYS = {
   sessions: [],
 };
 
-const DEFAULT_LOCAL_DATA = {
+export const DEFAULT_LOCAL_DATA = {
   instrument: {
     hasUsed_Bell: true,
     hasUsed_Bowl: true,

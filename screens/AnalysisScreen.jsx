@@ -195,43 +195,49 @@ export default function AnalysisScreen() {
       labels: dates.map((d) => d.slice(5, 10)), // Show MM-DD
       datasets: [
         {
-          data: dates.map((date) =>
-            localData.meditation?.reduce(
-              (sum, item) =>
-                sum +
-                (item.sessionsByDate.find((s) => s.date === date)
-                  ?.sessionCount || 0),
-              0
-            )
-          ),
+          data: localData["meditation"].length
+            ? dates.map((date) =>
+                localData.meditation?.reduce(
+                  (sum, item) =>
+                    sum +
+                    (item.sessionsByDate.find((s) => s.date === date)
+                      ?.sessionCount || 0),
+                  0
+                )
+              )
+            : [0],
           color: () => "#4CAF50",
           strokeWidth: 2,
           label: "Meditation",
         },
         {
-          data: dates.map((date) =>
-            localData.breathing?.reduce(
-              (sum, item) =>
-                sum +
-                (item.sessionsByDate.find((s) => s.date === date)
-                  ?.sessionCount || 0),
-              0
-            )
-          ),
+          data: localData["breathing"].length
+            ? dates.map((date) =>
+                localData.breathing?.reduce(
+                  (sum, item) =>
+                    sum +
+                    (item.sessionsByDate.find((s) => s.date === date)
+                      ?.sessionCount || 0),
+                  0
+                )
+              )
+            : [0],
           color: () => "#2196F3",
           strokeWidth: 2,
           label: "Breathing",
         },
         {
-          data: dates.map((date) =>
-            localData.yoga?.reduce(
-              (sum, item) =>
-                sum +
-                (item.sessionsByDate.find((s) => s.date === date)
-                  ?.sessionCount || 0),
-              0
-            )
-          ),
+          data: localData["yoga"].length
+            ? dates.map((date) =>
+                localData.yoga?.reduce(
+                  (sum, item) =>
+                    sum +
+                    (item.sessionsByDate.find((s) => s.date === date)
+                      ?.sessionCount || 0),
+                  0
+                )
+              )
+            : [0],
           color: () => "#FF9800",
           strokeWidth: 2,
           label: "Yoga",
@@ -266,55 +272,61 @@ export default function AnalysisScreen() {
       labels: dates.map((d) => d.slice(5, 10)),
       datasets: [
         {
-          data: dates.reduce((acc, date, idx) => {
-            const prev = idx > 0 ? acc[idx - 1] : 0;
-            const daily = localData.meditation?.reduce(
-              (sum, item) =>
-                sum +
-                ((item.sessionsByDate.find((s) => s.date === date)
-                  ?.sessionCount || 0) *
-                  item.totalDuration) /
-                  item.sessionCount,
-              0
-            );
-            return [...acc, prev + (daily || 0)];
-          }, []),
+          data: localData["meditation"].length
+            ? dates.reduce((acc, date, idx) => {
+                const prev = idx > 0 ? acc[idx - 1] : 0;
+                const daily = localData.meditation?.reduce(
+                  (sum, item) =>
+                    sum +
+                    ((item.sessionsByDate.find((s) => s.date === date)
+                      ?.sessionCount || 0) *
+                      item.totalDuration) /
+                      item.sessionCount,
+                  0
+                );
+                return [...acc, prev + (daily || 0)];
+              }, [])
+            : [0],
           color: () => "#4CAF50",
           strokeWidth: 2,
           label: "Meditation",
         },
         {
-          data: dates.reduce((acc, date, idx) => {
-            const prev = idx > 0 ? acc[idx - 1] : 0;
-            const daily = localData.breathing?.reduce(
-              (sum, item) =>
-                sum +
-                ((item.sessionsByDate.find((s) => s.date === date)
-                  ?.sessionCount || 0) *
-                  item.totalDuration) /
-                  item.sessionCount,
-              0
-            );
-            return [...acc, prev + (daily || 0)];
-          }, []),
+          data: localData["breathing"].length
+            ? dates.reduce((acc, date, idx) => {
+                const prev = idx > 0 ? acc[idx - 1] : 0;
+                const daily = localData.breathing?.reduce(
+                  (sum, item) =>
+                    sum +
+                    ((item.sessionsByDate.find((s) => s.date === date)
+                      ?.sessionCount || 0) *
+                      item.totalDuration) /
+                      item.sessionCount,
+                  0
+                );
+                return [...acc, prev + (daily || 0)];
+              }, [])
+            : [0],
           color: () => "#2196F3",
           strokeWidth: 2,
           label: "Breathing",
         },
         {
-          data: dates.reduce((acc, date, idx) => {
-            const prev = idx > 0 ? acc[idx - 1] : 0;
-            const daily = localData.yoga?.reduce(
-              (sum, item) =>
-                sum +
-                ((item.sessionsByDate.find((s) => s.date === date)
-                  ?.sessionCount || 0) *
-                  item.totalDuration) /
-                  item.sessionCount,
-              0
-            );
-            return [...acc, prev + (daily || 0)];
-          }, []),
+          data: localData["yoga"].length
+            ? dates.reduce((acc, date, idx) => {
+                const prev = idx > 0 ? acc[idx - 1] : 0;
+                const daily = localData.yoga?.reduce(
+                  (sum, item) =>
+                    sum +
+                    ((item.sessionsByDate.find((s) => s.date === date)
+                      ?.sessionCount || 0) *
+                      item.totalDuration) /
+                      item.sessionCount,
+                  0
+                );
+                return [...acc, prev + (daily || 0)];
+              }, [])
+            : [0],
           color: () => "#FF9800",
           strokeWidth: 2,
           label: "Yoga",
