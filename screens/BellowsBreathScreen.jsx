@@ -29,6 +29,7 @@ export default function BellowsBreathScreen() {
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
   const isBreathingRunning = useRef(false);
+  const roundRef = useRef(1);
 
   const maxReps = 30;
   const maxRounds = 3;
@@ -63,7 +64,7 @@ export default function BellowsBreathScreen() {
     isBreathingRunning.current = true;
     setRepCount(0);
 
-    speak(`Round ${round} Start`);
+    speak(`Round ${roundRef.current} Start`);
     startTimeRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
@@ -72,7 +73,7 @@ export default function BellowsBreathScreen() {
         if (prev + 1 >= maxReps) {
           clearInterval(intervalRef.current);
           handleRoundCompletion();
-          return prev;
+          return maxReps; // Return maxReps to show full count before switching
         }
         return prev + 1;
       });
@@ -80,16 +81,19 @@ export default function BellowsBreathScreen() {
   };
 
   const handleRoundCompletion = () => {
-    speak(`Round ${round} Complete`);
-    if (round < maxRounds) {
+    speak(`Round ${roundRef.current} Complete`);
+
+    if (roundRef.current < maxRounds) {
       setTimeout(() => {
-        setRound((prev) => prev + 1);
+        roundRef.current += 1;
+        setRound(roundRef.current);
         setRepCount(0);
         startBreathing();
       }, 2000); // small pause between rounds
     } else {
       setIsRunning(false);
       speak("Bellows Breath Complete");
+      stopBreathing();
     }
   };
 
@@ -98,6 +102,7 @@ export default function BellowsBreathScreen() {
     setIsRunning(false);
     setRepCount(0);
     setRound(1);
+    roundRef.current = 1;
 
     if (saveSession && isBreathingRunning.current) {
       const duration = startTimeRef.current

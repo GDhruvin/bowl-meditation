@@ -151,7 +151,7 @@ export default function DownwardDogScreen() {
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
-            Adho Mukha Svanasana (Downward Dog)
+            Adho Mukha Svanasana
           </Text>
           <View style={{ width: 24 }} />
         </View>
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    backgroundColor: "rgba(45, 45, 45, 0.9)",
   },
   header: {
     flexDirection: "row",

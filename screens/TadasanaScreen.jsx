@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    backgroundColor: "rgba(45, 45, 45, 0.9)",
   },
   header: {
     flexDirection: "row",

@@ -8,10 +8,11 @@ import {
   Dimensions,
   Animated,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
-export default function OnboardingScreens({ navigation }) {
+export default function OnboardingScreen({ navigation }) {
   const [currentScreen, setCurrentScreen] = useState(0);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(1)).current;
@@ -145,7 +146,8 @@ export default function OnboardingScreens({ navigation }) {
     }
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
+    await AsyncStorage.setItem("hasSeenOnboarding", "true");
     navigation.replace("MainTabs");
   };
 

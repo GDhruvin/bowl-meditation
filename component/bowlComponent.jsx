@@ -49,6 +49,17 @@ export default function BowlComponent() {
     checkFirstUse();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (bowlSound) {
+        bowlSound.unloadAsync().catch((err) => console.log(err));
+      }
+      if (meditateSound) {
+        meditateSound.unloadAsync().catch((err) => console.log(err));
+      }
+    };
+  }, [bowlSound, meditateSound]);
+
   const onSingleTap = async () => {
     if (meditateSound) {
       const meditateStatus = await meditateSound.getStatusAsync();

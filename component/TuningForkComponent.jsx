@@ -39,6 +39,14 @@ export default function TuningForkComponent() {
     checkFirstUse();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unloadAsync().catch((err) => console.log(err));
+      }
+    };
+  }, []);
+
   const playSound = async () => {
     if (isLoading) return;
     setIsLoading(true);
@@ -80,17 +88,19 @@ export default function TuningForkComponent() {
           <Ionicons name="help-circle-outline" size={28} color="#4CAF50" />
         </TouchableOpacity>
       </View>
-      <Pressable
-        onPress={playSound}
-        onLongPress={stopSound}
-        delayLongPress={300}
-      >
-        <Image
-          source={require("../assets/image/tuning_forks.png")}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </Pressable>
+      <View style={styles.imageContainer}>
+        <Pressable
+          onPress={playSound}
+          onLongPress={stopSound}
+          delayLongPress={300}
+        >
+          <Image
+            source={require("../assets/image/tuning_forks.png")}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </Pressable>
+      </View>
 
       <InstructionModal
         show={showInstructions}
@@ -161,8 +171,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#4CAF50",
   },
+  imageContainer: {
+    marginTop: "20%",
+    alignItems: "center",
+  },
   image: {
-    width: "100%",
+    width: 350,
+    height: 350,
   },
   modalTitle: {
     fontSize: 20,

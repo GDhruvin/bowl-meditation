@@ -11,7 +11,9 @@ import NetInfo from "@react-native-community/netinfo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import SplashScreen from "./screens/SplashScreen";
+import LoadingScreen from "./screens/LoadingScreen";
+import OnboardingScreen from "./screens/OnboardingScreen";
+import WelcomeBackScreen from "./screens/WelcomeBackScreen";
 import TabNavigator from "./navigators/TabNavigator";
 import BoxBreathingScreen from "./screens/BoxBreathingScreen";
 import FourSevenEightBreathingScreen from "./screens/FourSevenEightBreathingScreen";
@@ -69,10 +71,12 @@ export default function App() {
     <View style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Splash"
+          initialRouteName="Loading"
           screenOptions={{ headerShown: false }}
         >
-          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Loading" component={LoadingScreen} />
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="WelcomeBack" component={WelcomeBackScreen} />
           <Stack.Screen name="MainTabs" component={TabNavigator} />
           <Stack.Screen
             name="BoxBreathingScreen"

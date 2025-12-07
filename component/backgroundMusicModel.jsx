@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
+import Slider from "@react-native-community/slider";
 
 export const BackgroundMusicModal = ({ isVisible, onClose }) => {
   const images = {
@@ -118,15 +119,15 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
   ];
 
   const [playingId, setPlayingId] = useState(null);
+  const [volume, setVolume] = useState(0.7);
   const [isLoading, setIsLoading] = useState(false);
   const soundRef = useRef(null);
 
   const playSound = async (file, id) => {
-    if (isLoading) return; // prevent multiple quick taps
+    if (isLoading) return;
     setIsLoading(true);
 
     try {
-      // Stop previous sound first
       if (soundRef.current) {
         await soundRef.current.stopAsync();
         await soundRef.current.unloadAsync();
@@ -134,13 +135,19 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
         setPlayingId(null);
       }
 
-      // Now safely start new one
-      const { sound } = await Audio.Sound.createAsync(sounds[file], {
-        shouldPlay: true,
-        isLooping: true,
-      });
+      const { sound } = await Audio.Sound.createAsync(
+        sounds[file],
+        {
+          shouldPlay: true,
+          isLooping: true,
+          volume: volume,
+        }
+      );
+
       soundRef.current = sound;
       setPlayingId(id);
+
+      await sound.setVolumeAsync(volume);
     } catch (error) {
       console.error("Error playing sound:", error);
     } finally {
@@ -158,6 +165,18 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
       }
       soundRef.current = null;
       setPlayingId(null);
+    }
+  };
+
+  // Update volume when slider changes (only if sound is playing)
+  const handleVolumeChange = async (value) => {
+    setVolume(value);
+    if (soundRef.current) {
+      try {
+        await soundRef.current.setVolumeAsync(value);
+      } catch (error) {
+        console.error("Error setting volume:", error);
+      }
     }
   };
 
@@ -187,6 +206,24 @@ export const BackgroundMusicModal = ({ isVisible, onClose }) => {
               <Ionicons name="close" size={24} color="white" />
             </TouchableOpacity>
           </View>
+
+          {/* Volume Control Section */}
+          {playingId && (
+            <View style={styles.volumeContainer}>
+              <Ionicons name="volume-low" size={24} color="#aaa" />
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={1}
+                value={volume}
+                onValueChange={handleVolumeChange}
+                minimumTrackTintColor="#4CAF50"
+                maximumTrackTintColor="#555"
+                thumbTintColor="#4CAF50"
+              />
+              <Ionicons name="volume-high" size={24} color="#aaa" />
+            </View>
+          )}
 
           <FlatList
             data={musicList}
@@ -259,4 +296,15 @@ const styles = StyleSheet.create({
   },
   musicImage: { width: 48, height: 48, borderRadius: 8, marginRight: 12 },
   musicTitle: { flex: 1, fontSize: 16, color: "white" },
+  volumeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+    paddingHorizontal: 10,
+  },
+  slider: {
+    flex: 1,
+    height: 40,
+    marginHorizontal: 12,
+  },
 });

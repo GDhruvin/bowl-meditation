@@ -135,7 +135,7 @@ export default function AnalysisScreen() {
               0
             ) || 0,
             localData.yoga?.reduce((sum, item) => sum + item.sessionCount, 0) ||
-              0,
+            0,
           ],
         },
       ],
@@ -197,14 +197,14 @@ export default function AnalysisScreen() {
         {
           data: localData["meditation"].length
             ? dates.map((date) =>
-                localData.meditation?.reduce(
-                  (sum, item) =>
-                    sum +
-                    (item.sessionsByDate.find((s) => s.date === date)
-                      ?.sessionCount || 0),
-                  0
-                )
+              localData.meditation?.reduce(
+                (sum, item) =>
+                  sum +
+                  (item.sessionsByDate.find((s) => s.date === date)
+                    ?.sessionCount || 0),
+                0
               )
+            )
             : [0],
           color: () => "#4CAF50",
           strokeWidth: 2,
@@ -213,14 +213,14 @@ export default function AnalysisScreen() {
         {
           data: localData["breathing"].length
             ? dates.map((date) =>
-                localData.breathing?.reduce(
-                  (sum, item) =>
-                    sum +
-                    (item.sessionsByDate.find((s) => s.date === date)
-                      ?.sessionCount || 0),
-                  0
-                )
+              localData.breathing?.reduce(
+                (sum, item) =>
+                  sum +
+                  (item.sessionsByDate.find((s) => s.date === date)
+                    ?.sessionCount || 0),
+                0
               )
+            )
             : [0],
           color: () => "#2196F3",
           strokeWidth: 2,
@@ -229,14 +229,14 @@ export default function AnalysisScreen() {
         {
           data: localData["yoga"].length
             ? dates.map((date) =>
-                localData.yoga?.reduce(
-                  (sum, item) =>
-                    sum +
-                    (item.sessionsByDate.find((s) => s.date === date)
-                      ?.sessionCount || 0),
-                  0
-                )
+              localData.yoga?.reduce(
+                (sum, item) =>
+                  sum +
+                  (item.sessionsByDate.find((s) => s.date === date)
+                    ?.sessionCount || 0),
+                0
               )
+            )
             : [0],
           color: () => "#FF9800",
           strokeWidth: 2,
@@ -274,18 +274,18 @@ export default function AnalysisScreen() {
         {
           data: localData["meditation"].length
             ? dates.reduce((acc, date, idx) => {
-                const prev = idx > 0 ? acc[idx - 1] : 0;
-                const daily = localData.meditation?.reduce(
-                  (sum, item) =>
-                    sum +
-                    ((item.sessionsByDate.find((s) => s.date === date)
-                      ?.sessionCount || 0) *
-                      item.totalDuration) /
-                      item.sessionCount,
-                  0
-                );
-                return [...acc, prev + (daily || 0)];
-              }, [])
+              const prev = idx > 0 ? acc[idx - 1] : 0;
+              const daily = localData.meditation?.reduce(
+                (sum, item) =>
+                  sum +
+                  ((item.sessionsByDate.find((s) => s.date === date)
+                    ?.sessionCount || 0) *
+                    item.totalDuration) /
+                  item.sessionCount,
+                0
+              );
+              return [...acc, prev + (daily || 0)];
+            }, [])
             : [0],
           color: () => "#4CAF50",
           strokeWidth: 2,
@@ -294,18 +294,18 @@ export default function AnalysisScreen() {
         {
           data: localData["breathing"].length
             ? dates.reduce((acc, date, idx) => {
-                const prev = idx > 0 ? acc[idx - 1] : 0;
-                const daily = localData.breathing?.reduce(
-                  (sum, item) =>
-                    sum +
-                    ((item.sessionsByDate.find((s) => s.date === date)
-                      ?.sessionCount || 0) *
-                      item.totalDuration) /
-                      item.sessionCount,
-                  0
-                );
-                return [...acc, prev + (daily || 0)];
-              }, [])
+              const prev = idx > 0 ? acc[idx - 1] : 0;
+              const daily = localData.breathing?.reduce(
+                (sum, item) =>
+                  sum +
+                  ((item.sessionsByDate.find((s) => s.date === date)
+                    ?.sessionCount || 0) *
+                    item.totalDuration) /
+                  item.sessionCount,
+                0
+              );
+              return [...acc, prev + (daily || 0)];
+            }, [])
             : [0],
           color: () => "#2196F3",
           strokeWidth: 2,
@@ -314,18 +314,18 @@ export default function AnalysisScreen() {
         {
           data: localData["yoga"].length
             ? dates.reduce((acc, date, idx) => {
-                const prev = idx > 0 ? acc[idx - 1] : 0;
-                const daily = localData.yoga?.reduce(
-                  (sum, item) =>
-                    sum +
-                    ((item.sessionsByDate.find((s) => s.date === date)
-                      ?.sessionCount || 0) *
-                      item.totalDuration) /
-                      item.sessionCount,
-                  0
-                );
-                return [...acc, prev + (daily || 0)];
-              }, [])
+              const prev = idx > 0 ? acc[idx - 1] : 0;
+              const daily = localData.yoga?.reduce(
+                (sum, item) =>
+                  sum +
+                  ((item.sessionsByDate.find((s) => s.date === date)
+                    ?.sessionCount || 0) *
+                    item.totalDuration) /
+                  item.sessionCount,
+                0
+              );
+              return [...acc, prev + (daily || 0)];
+            }, [])
             : [0],
           color: () => "#FF9800",
           strokeWidth: 2,
@@ -706,6 +706,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginHorizontal: 20,
+    marginBottom: 100,
   },
   section: {
     marginBottom: 24,

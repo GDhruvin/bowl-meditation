@@ -12,12 +12,12 @@ const INSTRUMENT_KEYS = {
 
 export const DEFAULT_LOCAL_DATA = {
   instrument: {
-    hasUsed_Bell: true,
-    hasUsed_Bowl: true,
-    hasUsed_Gong: true,
-    hasUsed_HandPan: true,
-    hasUsed_OceanDrum: true,
-    hasUsed_TuningFork: true,
+    hasUsed_Bell: false,
+    hasUsed_Bowl: false,
+    hasUsed_Gong: false,
+    hasUsed_HandPan: false,
+    hasUsed_OceanDrum: false,
+    hasUsed_TuningFork: false,
     sessions: [],
   },
   meditation: [],
