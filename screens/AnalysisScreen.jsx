@@ -58,6 +58,20 @@ export default function AnalysisScreen() {
     });
   };
 
+  const formatDuration = (totalSeconds) => {
+    const seconds = Math.floor(totalSeconds);
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+
+    let result = [];
+    if (h > 0) result.push(`${h} hour`);
+    if (m > 0) result.push(`${m} min`);
+    if (s > 0 || result.length === 0) result.push(`${s} second`);
+
+    return result.join(" ");
+  };
+
   // Section descriptions for the modal
   const sectionDescriptions = {
     "Session Counts by Category": {
@@ -142,34 +156,33 @@ export default function AnalysisScreen() {
     };
 
     // Pie chart: Total duration distribution
+    const meditationDuration =
+      localData.meditation?.reduce((sum, item) => sum + item.totalDuration, 0) ||
+      0;
+    const breathingDuration =
+      localData.breathing?.reduce((sum, item) => sum + item.totalDuration, 0) ||
+      0;
+    const yogaDuration =
+      localData.yoga?.reduce((sum, item) => sum + item.totalDuration, 0) || 0;
+
     const pieData = [
       {
-        name: "Meditation",
-        duration:
-          localData.meditation?.reduce(
-            (sum, item) => sum + item.totalDuration,
-            0
-          ) || 0,
+        name: `Meditation (${formatDuration(meditationDuration)})`,
+        duration: meditationDuration,
         color: "#4CAF50",
         legendFontColor: "#B0BEC5",
         legendFontSize: 14,
       },
       {
-        name: "Breathing",
-        duration:
-          localData.breathing?.reduce(
-            (sum, item) => sum + item.totalDuration,
-            0
-          ) || 0,
+        name: `Breathing (${formatDuration(breathingDuration)})`,
+        duration: breathingDuration,
         color: "#2196F3",
         legendFontColor: "#B0BEC5",
         legendFontSize: 14,
       },
       {
-        name: "Yoga",
-        duration:
-          localData.yoga?.reduce((sum, item) => sum + item.totalDuration, 0) ||
-          0,
+        name: `Yoga (${formatDuration(yogaDuration)})`,
+        duration: yogaDuration,
         color: "#FF9800",
         legendFontColor: "#B0BEC5",
         legendFontSize: 14,
@@ -437,7 +450,7 @@ export default function AnalysisScreen() {
               <Text style={styles.itemDetail}>
                 Total Duration:{" "}
                 <Text style={{ color: "#2196F3" }}>
-                  {item.totalDuration} min
+                  {formatDuration(item.totalDuration)}
                 </Text>
               </Text>
               <Text style={styles.itemDetail}>
@@ -549,7 +562,6 @@ export default function AnalysisScreen() {
                 accessor="duration"
                 backgroundColor="transparent"
                 paddingLeft="15"
-                absolute
               />
             </View>
             <View style={styles.section}>
