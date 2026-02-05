@@ -20,6 +20,7 @@ import FourSevenEightBreathingScreen from "./screens/FourSevenEightBreathingScre
 import AlternateNostrilBreathingScreen from "./screens/AlternateNostrilBreathingScreen";
 import TriangleBreathingScreen from "./screens/TriangleBreathingScreen";
 import BellowsBreathScreen from "./screens/BellowsBreathScreen";
+import HummingBeeBreathScreen from "./screens/HummingBeeBreathScreen";
 import OmChantingScreen from "./screens/OmChantingScreen";
 import CandleGazingScreen from "./screens/CandleGazingScreen";
 import SoHumMantraScreen from "./screens/SoHumMantraScreen";
@@ -97,6 +98,10 @@ export default function App() {
           <Stack.Screen
             name="BellowsBreathScreen"
             component={BellowsBreathScreen}
+          />
+          <Stack.Screen
+            name="HummingBeeBreathScreen"
+            component={HummingBeeBreathScreen}
           />
           <Stack.Screen name="OmChantingScreen" component={OmChantingScreen} />
           <Stack.Screen

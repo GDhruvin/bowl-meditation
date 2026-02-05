@@ -34,6 +34,12 @@ const breathingExercises = [
     description: "Rapid inhale and exhale to energize and stimulate your body.",
     screen: "BellowsBreathScreen",
   },
+  {
+    id: "6",
+    name: "Humming Bee Breath (Bhramari)",
+    description: "Calming breath with humming sound to reduce anxiety and stress.",
+    screen: "HummingBeeBreathScreen",
+  },
 ];
 
 export default function BreathingScreen({ navigation }) {
