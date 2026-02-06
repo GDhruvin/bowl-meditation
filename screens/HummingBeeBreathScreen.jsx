@@ -119,6 +119,7 @@ export default function HummingBeeBreathScreen() {
     const stopWaves = () => {
         if (waveAnimationRef.current) {
             waveAnimationRef.current.stop();
+            waveAnimationRef.current = null;
         }
         waveAnim1.setValue(0);
         waveAnim2.setValue(0);
